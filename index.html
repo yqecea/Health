@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Денсаулық және Сөз | Адам өмірі мен тіл тазалығы</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts: Philosopher + Mulish -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,400;0,700;1,400&family=Mulish:wght@200;300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- GSAP + ScrollTrigger + SplitText alternative -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'serif': ['Philosopher', 'serif'],
+                        'sans': ['Mulish', 'sans-serif'],
+                    },
+                    colors: {
+                        'paper': '#F2F0E9',
+                        'ink': '#1A2C24',
+                        'blood': '#D65A31',
+                        'sage': '#8A9A5B',
+                        'stone': '#E5E2D9',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background: #F2F0E9;
+            color: #1A2C24;
+            font-family: 'Mulish', sans-serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            background: #D65A31;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: multiply;
+            transition: transform 0.15s ease-out, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+        }
+        
+        .cursor.hover {
+            width: 80px;
+            height: 80px;
+            background: transparent;
+            border: 2px solid #D65A31;
+            backdrop-filter: blur(4px);
+        }
+        
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            background: #D65A31;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+        }
+        
+        @media (max-width: 768px) {
+            .cursor, .cursor-dot { display: none; }
+            body { cursor: auto; }
+        }
+        
+        /* Loader */
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: #1A2C24;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .loader-text {
+            font-family: 'Philosopher', serif;
+            font-size: 3rem;
+            color: #F2F0E9;
+            overflow: hidden;
+        }
+        
+        .loader-text span {
+            display: inline-block;
+        }
+        
+        .loader-bar {
+            width: 200px;
+            height: 2px;
+            background: rgba(242, 240, 233, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .loader-bar-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: #D65A31;
+        }
+        
+        /* Canvas background */
+        #organic-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.5;
+        }
+        
+        /* Navigation */
+        .nav-blend {
+            mix-blend-mode: difference;
+        }
+        
+        /* Drop Cap */
+        .drop-cap::first-letter {
+            float: left;
+            font-size: 5rem;
+            line-height: 4rem;
+            padding-right: 1rem;
+            padding-top: 0.5rem;
+            color: #D65A31;
+            font-family: 'Philosopher', serif;
+            font-style: italic;
+            font-weight: 700;
+        }
+        
+        /* Text selection */
+        ::selection {
+            background: rgba(214, 90, 49, 0.3);
+            color: #1A2C24;
+        }
+        
+        /* Decorative arch image mask */
+        .arch-mask {
+            border-radius: 999px 999px 0 0;
+        }
+        
+        /* Card styles */
+        .organic-card {
+            background: white;
+            border-radius: 1rem;
+            border: 1px solid rgba(229, 226, 217, 0.5);
+            box-shadow: 0 10px 40px rgba(26, 44, 36, 0.08);
+            transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.7s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .organic-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(138, 154, 91, 0.15) 0%, transparent 70%);
+            transition: transform 0.7s ease;
+            transform: scale(0);
+        }
+        
+        .organic-card:hover::before {
+            transform: scale(2.5);
+        }
+        
+        .organic-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 30px 80px rgba(26, 44, 36, 0.15);
+        }
+        
+        /* Hover image zoom */
+        .img-zoom {
+            transition: transform 2s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .img-zoom:hover {
+            transform: scale(1.15);
+        }
+        
+        /* Image overlay animation */
+        .img-reveal {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .img-reveal::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: #F2F0E9;
+            transform-origin: right;
+        }
+        
+        /* Floating animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(1deg); }
+            50% { transform: translateY(-25px) rotate(0deg); }
+            75% { transform: translateY(-10px) rotate(-1deg); }
+        }
+        
+        @keyframes floatReverse {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(15px) rotate(-1deg); }
+            50% { transform: translateY(25px) rotate(0deg); }
+            75% { transform: translateY(10px) rotate(1deg); }
+        }
+        
+        .float { animation: float 8s ease-in-out infinite; }
+        .float-reverse { animation: floatReverse 10s ease-in-out infinite; }
+        .float-delay-1 { animation-delay: 1s; }
+        .float-delay-2 { animation-delay: 2s; }
+        .float-delay-3 { animation-delay: 3s; }
+        
+        /* Spin slow */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .spin-slow { animation: spin-slow 30s linear infinite; }
+        .spin-slow-reverse { animation: spin-slow 25s linear infinite reverse; }
+        
+        /* Pulse */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        .pulse { animation: pulse 3s ease-in-out infinite; }
+        
+        /* Marquee */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .marquee-track {
+            animation: marquee 30s linear infinite;
+        }
+        
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+        
+        /* Decorative blob */
+        .blob {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            transition: all 0.8s ease;
+        }
+        
+        .blob:hover {
+            border-radius: 40% 60% 70% 30% / 30% 70% 40% 60%;
+        }
+        
+        @keyframes blob-morph {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+            50% { border-radius: 40% 60% 60% 40% / 60% 40% 60% 40%; }
+            75% { border-radius: 60% 30% 40% 70% / 40% 70% 30% 60%; }
+        }
+        
+        .blob-animated {
+            animation: blob-morph 15s ease-in-out infinite;
+        }
+        
+        /* Horizontal rule */
+        .organic-hr {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #1A2C24, transparent);
+            opacity: 0.2;
+        }
+        
+        /* Accent underline */
+        .accent-underline {
+            position: relative;
+            display: inline;
+        }
+        
+        .accent-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #D65A31;
+            transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .accent-underline:hover::after {
+            width: 100%;
+        }
+        
+        /* Magnetic effect */
+        .magnetic {
+            transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        /* Text reveal line by line */
+        .line-reveal {
+            overflow: hidden;
+        }
+        
+        .line-reveal > span {
+            display: block;
+            transform: translateY(100%);
+        }
+        
+        /* Char animation */
+        .char {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(50px) rotate(10deg);
+        }
+        
+        /* Stagger children */
+        .stagger-item {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        
+        /* Tabs */
+        .tab-btn {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #D65A31;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            color: #D65A31;
+        }
+        
+        .tab-btn.active::after {
+            transform: scaleX(1);
+        }
+        
+        /* Accordion - FIXED */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(0.23, 1, 0.32, 1), padding 0.3s ease;
+        }
+        
+        .accordion-item.open .accordion-content {
+            max-height: 500px;
+        }
+        
+        .accordion-icon {
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .accordion-item.open .accordion-icon {
+            transform: rotate(45deg);
+        }
+        
+        .accordion-item.open .accordion-header {
+            background: rgba(138, 154, 91, 0.05);
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #F2F0E9;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #8A9A5B;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D65A31;
+        }
+        
+        /* Counter circle */
+        .counter-circle {
+            position: relative;
+        }
+        
+        .counter-circle::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border: 1px dashed rgba(138, 154, 91, 0.4);
+            border-radius: 50%;
+            animation: spin-slow 20s linear infinite reverse;
+        }
+        
+        .counter-circle::after {
+            content: '';
+            position: absolute;
+            inset: -16px;
+            border: 1px dotted rgba(214, 90, 49, 0.2);
+            border-radius: 50%;
+            animation: spin-slow 30s linear infinite;
+        }
+        
+        /* Quote styling */
+        .quote-large {
+            position: relative;
+        }
+        
+        .quote-large::before {
+            content: '"';
+            position: absolute;
+            top: -2rem;
+            left: -1rem;
+            font-size: 10rem;
+            font-family: 'Philosopher', serif;
+            color: rgba(214, 90, 49, 0.1);
+            line-height: 1;
+            pointer-events: none;
+        }
+        
+        /* Glow effect */
+        .glow {
+            box-shadow: 0 0 60px rgba(214, 90, 49, 0.15);
+        }
+        
+        /* Underline grow */
+        .underline-grow {
+            background-image: linear-gradient(#D65A31, #D65A31);
+            background-size: 0% 2px;
+            background-position: 0 100%;
+            background-repeat: no-repeat;
+            transition: background-size 0.5s ease;
+        }
+        
+        .underline-grow:hover {
+            background-size: 100% 2px;
+        }
+        
+        /* Scale on scroll */
+        .scale-on-scroll {
+            transition: transform 0.1s linear;
+        }
+        
+        /* Parallax layer */
+        .parallax-layer {
+            will-change: transform;
+        }
+        
+        /* Shimmer effect */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+        
+        /* Border draw animation */
+        .border-draw {
+            position: relative;
+        }
+        
+        .border-draw::before,
+        .border-draw::after {
+            content: '';
+            position: absolute;
+            background: #D65A31;
+            transition: all 0.5s ease;
+        }
+        
+        .border-draw::before {
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+        }
+        
+        .border-draw::after {
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 2px;
+        }
+        
+        .border-draw:hover::before,
+        .border-draw:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-text">
+            <span id="loader-char-1">Д</span><span id="loader-char-2">е</span><span id="loader-char-3">н</span><span id="loader-char-4">с</span><span id="loader-char-5">а</span><span id="loader-char-6">у</span><span id="loader-char-7">л</span><span id="loader-char-8">ы</span><span id="loader-char-9">қ</span>
+        </div>
+        <div class="loader-bar">
+            <div class="loader-bar-fill" id="loader-bar-fill"></div>
+        </div>
+    </div>
+    
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    
+    <!-- Organic Canvas Background -->
+    <canvas id="organic-canvas"></canvas>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full p-6 md:p-8 flex justify-between items-center z-50 nav-blend text-white opacity-0 transition-opacity duration-1000" id="navbar">
+        <a href="#hero" class="font-serif text-lg md:text-xl tracking-wide cursor-pointer magnetic" data-cursor="hover">
+            ◈ Денсаулық
+        </a>
+        
+        <div class="hidden md:flex items-center gap-10">
+            <a href="#intro" class="font-sans text-xs uppercase tracking-[0.2em] font-semibold accent-underline cursor-pointer magnetic" data-cursor="hover">Кіріспе</a>
+            <a href="#health" class="font-sans text-xs uppercase tracking-[0.2em] font-semibold accent-underline cursor-pointer magnetic" data-cursor="hover">Денсаулық</a>
+            <a href="#language" class="font-sans text-xs uppercase tracking-[0.2em] font-semibold accent-underline cursor-pointer magnetic" data-cursor="hover">Сөз</a>
+            <a href="#synthesis" class="font-sans text-xs uppercase tracking-[0.2em] font-semibold accent-underline cursor-pointer magnetic" data-cursor="hover">Синтез</a>
+        </div>
+        
+        <button id="menu-btn" class="md:hidden font-sans text-xs uppercase tracking-widest cursor-pointer magnetic" data-cursor="hover">
+            Мәзір
+        </button>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-ink z-40 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500">
+        <div class="text-center space-y-8">
+            <a href="#intro" class="block font-serif text-4xl text-paper hover:text-blood transition-colors mobile-link">Кіріспе</a>
+            <a href="#health" class="block font-serif text-4xl text-paper hover:text-blood transition-colors mobile-link">Денсаулық</a>
+            <a href="#language" class="block font-serif text-4xl text-paper hover:text-blood transition-colors mobile-link">Сөз тазалығы</a>
+            <a href="#synthesis" class="block font-serif text-4xl text-paper hover:text-blood transition-colors mobile-link">Синтез</a>
+            <a href="#conclusion" class="block font-serif text-4xl text-paper hover:text-blood transition-colors mobile-link">Қорытынды</a>
+        </div>
+    </div>
+    
+    <!-- ==================== HERO SECTION ==================== -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <!-- Decorative elements -->
+        <div class="absolute top-20 left-10 w-32 h-32 border border-sage/30 rounded-full float opacity-50"></div>
+        <div class="absolute bottom-32 right-20 w-48 h-48 border border-blood/20 rounded-full float-reverse float-delay-1 opacity-30"></div>
+        <div class="absolute top-1/3 right-1/4 w-4 h-4 bg-blood rounded-full float float-delay-2 pulse"></div>
+        <div class="absolute bottom-1/4 left-1/4 w-6 h-6 bg-sage/50 rounded-full float-reverse float-delay-3"></div>
+        <div class="absolute top-1/2 left-10 w-24 h-24 border border-dashed border-ink/10 rounded-full spin-slow-reverse"></div>
+        
+        <!-- Large blob background -->
+        <div class="absolute top-1/4 right-0 w-[600px] h-[600px] bg-sage/5 blob-animated -z-10"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blood/5 blob-animated -z-10" style="animation-delay: -5s;"></div>
+        
+        <!-- Spinning badge -->
+        <div class="absolute top-32 right-10 md:right-32 w-24 h-24 md:w-32 md:h-32 spin-slow hero-badge">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+                <defs>
+                    <path id="circle-path" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"/>
+                </defs>
+                <text class="fill-ink text-[8px] font-sans uppercase tracking-[0.3em]">
+                    <textPath href="#circle-path">
+                        • ЗЕРТТЕУ ЖҰМЫСЫ • ДЕНСАУЛЫҚ ЖӘНЕ СӨЗ •
+                    </textPath>
+                </text>
+            </svg>
+        </div>
+        
+        <div class="relative z-10 text-center px-6 max-w-6xl mx-auto">
+            <p class="font-sans text-xs uppercase tracking-[0.4em] text-ink/60 mb-8 font-semibold hero-subtitle">
+                Қазақстан • 2024
+            </p>
+            
+            <h1 class="font-serif text-6xl md:text-[9rem] leading-[0.85] text-ink mb-8">
+                <span class="block hero-title-1">Адам өмірін</span>
+                <span class="block text-blood italic hero-title-2">қорғау</span>
+            </h1>
+            
+            <div class="flex items-center justify-center gap-6 mb-12 hero-divider">
+                <div class="h-px w-16 bg-ink/30 hero-line-left"></div>
+                <span class="font-serif text-2xl md:text-3xl text-ink/70 italic hero-tagline">Денсаулық және Сөз</span>
+                <div class="h-px w-16 bg-ink/30 hero-line-right"></div>
+            </div>
+            
+            <p class="font-sans text-lg md:text-xl text-ink/60 max-w-2xl mx-auto mb-16 leading-relaxed font-light hero-description">
+                Қоғамның басты байлығы — адам денсаулығы мен тіл тазалығының үйлесімі туралы терең академиялық зерттеу
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center hero-buttons">
+                <a href="#intro" class="font-sans uppercase tracking-widest text-xs border border-ink/20 px-8 py-4 rounded-full transition-all duration-500 hover:bg-blood hover:text-white hover:border-transparent hover:scale-105 cursor-pointer magnetic border-draw" data-cursor="hover">
+                    Зерттеуді бастау
+                </a>
+                <a href="#synthesis" class="font-sans text-sm underline-grow cursor-pointer magnetic" data-cursor="hover">
+                    Негізгі идеяға өту →
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 hero-scroll">
+            <span class="font-sans text-xs uppercase tracking-[0.3em] text-ink/40 font-semibold">Төмен</span>
+            <div class="w-px h-16 bg-gradient-to-b from-ink/40 to-transparent relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-4 bg-blood scroll-line-anim"></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Marquee divider -->
+    <div class="py-6 border-y border-stone overflow-hidden">
+        <div class="flex whitespace-nowrap">
+            <div class="marquee-track flex items-center gap-8">
+                <span class="font-serif text-2xl text-ink/20 italic">Тәні саудың – жаны сау</span>
+                <span class="text-blood text-xl">◆</span>
+                <span class="font-serif text-2xl text-ink/20 italic">Жаны саудың – тілі сау</span>
+                <span class="text-sage text-xl">◆</span>
+                <span class="font-serif text-2xl text-ink/20 italic">Бірінші байлық – денсаулық</span>
+                <span class="text-blood text-xl">◆</span>
+                <span class="font-serif text-2xl text-ink/20 italic">Жақсы сөз – жарым ырыс</span>
+                <span class="text-sage text-xl">◆</span>
+                <span class="font-serif text-2xl text-ink/20 italic">Айтылған сөз – атылған оқ</span>
+                <span class="text-blood text-xl">◆</span>
+            </div>
+            <div class="marquee-track flex items-center gap-8" aria-hidden="true">
+                <span class="font-serif text-2xl text-ink/20 italic">Тәні саудың – жаны сау</span>
+                <span class="text-blood text-xl">◆</span>
+                <span class="font-serif text-2xl text-ink/20 italic">Жаны саудың – тілі сау</span>
+                <span class="text-sage text-xl">◆</span>
+                <span class="font-serif text-2xl text-ink/20 italic">Бірінші байлық – денсаулық</span>
+                <span class="text-blood text-xl">◆</span>
+                <span class="font-serif text-2xl text-ink/20 italic">Жақсы сөз – жарым ырыс</span>
+                <span class="text-sage text-xl">◆</span>
+                <span class="font-serif text-2xl text-ink/20 italic">Айтылған сөз – атылған оқ</span>
+                <span class="text-blood text-xl">◆</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ==================== INTRODUCTION SECTION ==================== -->
+    <section id="intro" class="py-32 md:py-40">
+        <div class="max-w-7xl mx-auto px-6 md:px-24">
+            <!-- Section header -->
+            <div class="grid md:grid-cols-2 gap-12 md:gap-24 items-start mb-24">
+                <div>
+                    <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold reveal">Кіріспе</span>
+                    <h2 class="font-serif text-5xl md:text-7xl text-ink mt-4 leading-tight reveal">
+                        Зерттеудің<br><span class="text-blood italic">мақсаты</span>
+                    </h2>
+                </div>
+                
+                <div class="md:pt-16 reveal">
+                    <p class="font-sans text-lg text-ink/70 leading-relaxed font-light">
+                        Бұл академиялық зерттеу жұмысы адам өмірінің екі негізгі аспектісін — физикалық денсаулық пен тіл мәдениетін — біріктіріп қарастырады.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Main content -->
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <!-- Text content -->
+                <div class="reveal-left">
+                    <div class="font-sans text-lg text-ink/80 leading-relaxed font-light space-y-6 text-justify">
+                        <p class="drop-cap">
+                            Денсаулық пен сөз — бұл адам өмірінің екі тірегі, бірі тәнді, екіншісі жанды сауықтырады. Бұл зерттеу жұмысы екі маңызды аспектіні тереңірек қарастыруға арналған. Біріншісі — әлеуметтік-физиологиялық аспект, яғни адам өмірінің құндылығын түсіну және денсаулықты сақтаудың жолдарын анықтау.
+                        </p>
+                        <p>
+                            Екіншісі — рухани-мәдени аспект, бұл тіл тазалығы мен сөйлеу мәдениетінің адам өміріндегі рөлін зерттеу. Қазіргі заманда, технология мен жаһандану дәуірінде, дәстүрлі құндылықтарымызды сақтау өте маңызды.
+                        </p>
+                        <p>
+                            Зерттеудің негізгі мақсаты — қоғамның басты байлығы саналатын денсаулықтың маңызын түсіндіру және ана тіліміздің тазалығын сақтаудың өзектілігін көрсету. Біз дәлелдейміз: тәні сау адамның жаны да сау, жаны сау адамның тілі де таза болады.
+                        </p>
+                    </div>
+                    
+                    <!-- Two aspects cards -->
+                    <div class="grid sm:grid-cols-2 gap-6 mt-12">
+                        <div class="organic-card p-8 cursor-pointer stagger-item" data-cursor="hover">
+                            <div class="w-14 h-14 bg-sage/10 rounded-full flex items-center justify-center mb-6 pulse">
+                                <svg class="w-7 h-7 text-sage" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                </svg>
+                            </div>
+                            <h3 class="font-serif text-xl text-ink mb-2">Физиологиялық</h3>
+                            <p class="font-sans text-sm text-ink/60 font-light">Тән саулығы, дене қуаты, өмір сүру ұзақтығы</p>
+                        </div>
+                        
+                        <div class="organic-card p-8 cursor-pointer stagger-item" data-cursor="hover">
+                            <div class="w-14 h-14 bg-blood/10 rounded-full flex items-center justify-center mb-6 pulse" style="animation-delay: 0.5s;">
+                                <svg class="w-7 h-7 text-blood" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                </svg>
+                            </div>
+                            <h3 class="font-serif text-xl text-ink mb-2">Рухани-мәдени</h3>
+                            <p class="font-sans text-sm text-ink/60 font-light">Тіл тазалығы, сөз мәдениеті, рухани байлық</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Image -->
+                <div class="reveal-right relative">
+                    <div class="relative overflow-hidden arch-mask aspect-[3/4] img-reveal">
+                        <img 
+                            src="https://image.pollinations.ai/prompt/wise%20kazakh%20elder%20silhouette%20reading%20ancient%20book%20warm%20golden%20sunset%20light%20rays%20dust%20particles%20atmospheric%20double%20exposure%20nature%20leaves%20organic%20artistic%20cinematic%20lighting%208k%20highly%20detailed%20photorealistic?width=800&height=1100&nologo=true&seed=123" 
+                            alt="Ақсақал кітап оқып отыр"
+                            class="w-full h-full object-cover img-zoom"
+                            loading="lazy"
+                        >
+                    </div>
+                    
+                    <!-- Floating quote -->
+                    <div class="absolute -bottom-8 -left-8 bg-white p-6 rounded-2xl shadow-xl max-w-xs float glow">
+                        <p class="font-serif text-lg text-ink italic">«Жақсы сөз — жарым ырыс»</p>
+                        <p class="font-sans text-xs text-ink/50 mt-2 uppercase tracking-wider">— Қазақ халық мақалы</p>
+                    </div>
+                    
+                    <!-- Decorative circle -->
+                    <div class="absolute -top-8 -right-8 w-32 h-32 border-2 border-dashed border-sage/30 rounded-full spin-slow-reverse"></div>
+                    <div class="absolute -top-12 -right-12 w-40 h-40 border border-blood/10 rounded-full float-reverse"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ==================== STATISTICS SECTION ==================== -->
+    <section class="py-24 bg-ink text-paper relative overflow-hidden">
+        <!-- Animated background -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-1/4 w-96 h-96 bg-sage rounded-full blur-3xl float"></div>
+            <div class="absolute bottom-0 right-1/4 w-80 h-80 bg-blood rounded-full blur-3xl float-reverse"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-6 md:px-24 relative z-10">
+            <div class="text-center mb-20">
+                <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold reveal">Статистика</span>
+                <h2 class="font-serif text-4xl md:text-6xl text-paper mt-4 reveal">
+                    Маңызды көрсеткіштер
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Stat 1 -->
+                <div class="text-center reveal stagger-item">
+                    <div class="counter-circle w-32 h-32 mx-auto mb-6 rounded-full border border-paper/20 flex items-center justify-center">
+                        <span class="font-serif text-5xl text-paper counter" data-target="78">0</span>
+                    </div>
+                    <h3 class="font-sans text-xs uppercase tracking-[0.3em] text-paper/60 font-semibold mb-2">Өмір сүру ұзақтығы</h3>
+                    <p class="font-sans text-sm text-paper/40 font-light">Қазақстанда (жыл)</p>
+                </div>
+                
+                <!-- Stat 2 -->
+                <div class="text-center reveal stagger-item">
+                    <div class="counter-circle w-32 h-32 mx-auto mb-6 rounded-full border border-paper/20 flex items-center justify-center">
+                        <span class="font-serif text-5xl text-blood counter" data-target="42" data-suffix="%">0</span>
+                    </div>
+                    <h3 class="font-sans text-xs uppercase tracking-[0.3em] text-paper/60 font-semibold mb-2">Спорт</h3>
+                    <p class="font-sans text-sm text-paper/40 font-light">Шұғылданушылар</p>
+                </div>
+                
+                <!-- Stat 3 -->
+                <div class="text-center reveal stagger-item">
+                    <div class="counter-circle w-32 h-32 mx-auto mb-6 rounded-full border border-paper/20 flex items-center justify-center">
+                        <span class="font-serif text-5xl text-sage counter" data-target="15" data-suffix="М">0</span>
+                    </div>
+                    <h3 class="font-sans text-xs uppercase tracking-[0.3em] text-paper/60 font-semibold mb-2">Қазақ тілі</h3>
+                    <p class="font-sans text-sm text-paper/40 font-light">Сөйлеушілер саны</p>
+                </div>
+                
+                <!-- Stat 4 -->
+                <div class="text-center reveal stagger-item">
+                    <div class="counter-circle w-32 h-32 mx-auto mb-6 rounded-full border border-paper/20 flex items-center justify-center">
+                        <span class="font-serif text-5xl text-paper">100%</span>
+                    </div>
+                    <h3 class="font-sans text-xs uppercase tracking-[0.3em] text-paper/60 font-semibold mb-2">Жауапкершілік</h3>
+                    <p class="font-sans text-sm text-paper/40 font-light">Әркімнің міндеті</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ==================== HEALTH SECTION - PART 1 ==================== -->
+    <section id="health" class="py-32 md:py-40 relative overflow-hidden">
+        <!-- Background decoration -->
+        <div class="absolute top-1/4 right-0 w-[500px] h-[500px] bg-sage/5 blob-animated -z-10"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 md:px-24">
+            <div class="grid lg:grid-cols-12 gap-12 items-start">
+                <!-- Sticky image column -->
+                <div class="lg:col-span-5 lg:sticky lg:top-32 reveal-left">
+                    <div class="relative">
+                        <div class="overflow-hidden rounded-2xl img-reveal">
+                            <img 
+                                src="https://image.pollinations.ai/prompt/person%20silhouette%20meditation%20yoga%20pose%20on%20mountain%20peak%20sunrise%20kazakh%20altai%20mountains%20mist%20fog%20golden%20hour%20double%20exposure%20nature%20leaves%20branches%20organic%20artistic%20cinematic%20lighting%208k%20highly%20detailed%20photorealistic?width=700&height=900&nologo=true&seed=456" 
+                                alt="Медитация"
+                                class="w-full h-auto img-zoom"
+                                loading="lazy"
+                            >
+                        </div>
+                        
+                        <!-- Blob decoration -->
+                        <div class="absolute -z-10 -bottom-12 -right-12 w-48 h-48 bg-sage/20 blob-animated"></div>
+                        <div class="absolute -z-10 -top-8 -left-8 w-32 h-32 bg-blood/10 blob-animated" style="animation-delay: -7s;"></div>
+                    </div>
+                </div>
+                
+                <!-- Content column -->
+                <div class="lg:col-span-7">
+                    <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold reveal">І Бөлім</span>
+                    <h2 class="font-serif text-5xl md:text-7xl text-ink mt-4 mb-8 leading-tight reveal">
+                        Адам өмірін қорғау — <span class="text-blood italic">басты міндет</span>
+                    </h2>
+                    
+                    <!-- Constitution quote -->
+                    <div class="bg-white p-8 md:p-10 rounded-2xl shadow-lg mb-12 reveal quote-large glow">
+                        <blockquote class="font-serif text-xl md:text-2xl text-ink italic leading-relaxed">
+                            Қазақстан Республикасының ең қымбат қазынасы – адам және адамның өмірі, құқықтары мен бостандықтары
+                        </blockquote>
+                        <cite class="font-sans text-xs text-ink/50 mt-6 block uppercase tracking-wider">— ҚР Конституциясы, 1-бап</cite>
+                    </div>
+                    
+                    <div class="font-sans text-lg text-ink/80 leading-relaxed font-light space-y-6 text-justify reveal">
+                        <p>
+                            Адам өмірі — ең қасиетті құндылық. Бұл тек философиялық тұжырым емес, бұл біздің мемлекетіміздің негізгі заңында бекітілген принцип. Әрбір адамның өмір сүруге деген табиғи құқығын қорғау — гуманизмнің негізі және қоғамдық прогрестің кепілі.
+                        </p>
+                        <p>
+                            Қауіпсіздік мәдениеті деген түсінік кең ауқымды қамтиды: еңбек орнындағы қауіпсіздік ережелерін сақтаудан бастап, жол қозғалысы ережелеріне дейін, төтенше жағдайларда дұрыс әрекет етуден бастап, күнделікті өмірдегі сақтық шараларына дейін.
+                        </p>
+                    </div>
+                    
+                    <!-- Three pillars -->
+                    <div class="grid md:grid-cols-3 gap-8 mt-16">
+                        <div class="reveal stagger-item">
+                            <div class="h-1 w-12 bg-blood mb-6"></div>
+                            <h3 class="font-serif text-xl text-ink mb-4">Қауіпсіздік мәдениеті</h3>
+                            <p class="font-sans text-sm text-ink/60 font-light leading-relaxed">
+                                Адам өмірін қорғау — бұл кешенді жүйе. Оған еңбек қауіпсіздігі, жол ережесін сақтау жатады.
+                            </p>
+                        </div>
+                        
+                        <div class="reveal stagger-item">
+                            <div class="h-1 w-12 bg-sage mb-6"></div>
+                            <h3 class="font-serif text-xl text-ink mb-4">Өмір сүру құқығы</h3>
+                            <p class="font-sans text-sm text-ink/60 font-light leading-relaxed">
+                                Адамның өмір сүруге деген табиғи құқығы — бұл туғаннан берілетін құқық.
+                            </p>
+                        </div>
+                        
+                        <div class="reveal stagger-item">
+                            <div class="h-1 w-12 bg-ink mb-6"></div>
+                            <h3 class="font-serif text-xl text-ink mb-4">Жеке жауапкершілік</h3>
+                            <p class="font-sans text-sm text-ink/60 font-light leading-relaxed">
+                                Әрбір адамның өз денсаулығына деген жауапты қатынасы маңызды.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ==================== HEALTH SECTION - PART 2 ==================== -->
+    <section class="py-32 bg-stone/50 relative overflow-hidden">
+        <!-- Background blobs -->
+        <div class="absolute top-0 left-0 w-[400px] h-[400px] bg-sage/10 blob-animated -z-10" style="animation-delay: -3s;"></div>
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blood/5 blob-animated -z-10"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 md:px-24">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <!-- Content -->
+                <div class="order-2 lg:order-1 reveal-left">
+                    <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold">Қоғам байлығы</span>
+                    <h2 class="font-serif text-4xl md:text-6xl text-ink mt-4 mb-6 leading-tight">
+                        Денсаулық — <span class="text-blood italic">бірінші байлық</span>
+                    </h2>
+                    
+                    <p class="font-sans text-lg text-ink/70 mb-10 leading-relaxed font-light text-justify">
+                        Халық даналығында «Бірінші байлық – денсаулық» деп бекер айтылмаған. Дені сау ұлт – мемлекеттің басты капиталы, экономикалық өсудің негізі және ұлттық қауіпсіздіктің кепілі.
+                    </p>
+                    
+                    <!-- Accordion - FIXED -->
+                    <div class="space-y-4" id="accordion-container">
+                        <div class="accordion-item organic-card overflow-hidden" data-accordion="1">
+                            <button class="accordion-header w-full p-6 flex justify-between items-center text-left cursor-pointer transition-colors duration-300" data-cursor="hover">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-sage/10 rounded-full flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-sage" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="font-serif text-lg text-ink">Экономикалық фактор</span>
+                                </div>
+                                <span class="accordion-icon text-blood text-2xl font-light select-none">+</span>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="px-6 pb-6">
+                                    <p class="font-sans text-ink/60 leading-relaxed font-light text-justify">
+                                        Дені сау адам еңбекке қабілетті, ол ел экономикасына үлес қосады. Ауру-сырқаудың көбеюі мемлекетке экономикалық шығын әкеледі: медициналық шығындар, еңбек өнімділігінің төмендеуі, әлеуметтік төлемдер. Сондықтан халық денсаулығына инвестиция салу — ең тиімді экономикалық стратегия.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item organic-card overflow-hidden" data-accordion="2">
+                            <button class="accordion-header w-full p-6 flex justify-between items-center text-left cursor-pointer transition-colors duration-300" data-cursor="hover">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-blood/10 rounded-full flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-blood" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="font-serif text-lg text-ink">Салауатты өмір салты</span>
+                                </div>
+                                <span class="accordion-icon text-blood text-2xl font-light select-none">+</span>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="px-6 pb-6">
+                                    <p class="font-sans text-ink/60 leading-relaxed font-light text-justify">
+                                        Салауатты өмір салты (СӨС) — бұл өмір сүру философиясы. Ол дұрыс тамақтануды, спортпен жүйелі шұғылдануды, зиянды әдеттерден (темекі, ішімдік, есірткі) аулақ болуды қамтиды. Бұл жай ғана ережелер жиынтығы емес, бұл саналы таңдау.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item organic-card overflow-hidden" data-accordion="3">
+                            <button class="accordion-header w-full p-6 flex justify-between items-center text-left cursor-pointer transition-colors duration-300" data-cursor="hover">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-ink/10 rounded-full flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="font-serif text-lg text-ink">Психологиялық саулық</span>
+                                </div>
+                                <span class="accordion-icon text-blood text-2xl font-light select-none">+</span>
+                            </button>
+                            <div class="accordion-content">
+                                <div class="px-6 pb-6">
+                                    <p class="font-sans text-ink/60 leading-relaxed font-light text-justify">
+                                        Қазіргі заманда күйзеліс пен стресске қарсы тұру қабілеті физикалық денсаулықпен тең дәрежеде маңызды. Ментальды саулық — бұл эмоциялық тұрақтылық, өмірлік қиындықтарға төзімділік, қоршаған адамдармен жақсы қарым-қатынас орната білу.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Image -->
+                <div class="order-1 lg:order-2 reveal-right">
+                    <div class="relative">
+                        <div class="overflow-hidden rounded-2xl img-reveal">
+                            <img 
+                                src="https://image.pollinations.ai/prompt/kazakh%20eagle%20hunter%20berkutchi%20horseback%20silhouette%20golden%20eagle%20wings%20spread%20majestic%20steppe%20mountains%20background%20dramatic%20sky%20golden%20hour%20double%20exposure%20nature%20artistic%20cinematic%20lighting%208k%20highly%20detailed%20photorealistic?width=800&height=1000&nologo=true&seed=789" 
+                                alt="Қазақ бүркітші"
+                                class="w-full h-auto img-zoom"
+                                loading="lazy"
+                            >
+                        </div>
+                        
+                        <!-- Decorative elements -->
+                        <div class="absolute -top-6 -left-6 w-24 h-24 border-2 border-blood/20 rounded-full float"></div>
+                        <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-sage/10 rounded-2xl -z-10"></div>
+                        <div class="absolute top-1/2 -right-12 w-20 h-20 border border-dashed border-sage/30 rounded-full spin-slow"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ==================== LANGUAGE SECTION ==================== -->
+    <section id="language" class="py-32 md:py-40 relative overflow-hidden">
+        <!-- Background -->
+        <div class="absolute top-1/3 left-0 w-[600px] h-[600px] bg-blood/5 blob-animated -z-10"></div>
+        <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-sage/5 blob-animated -z-10" style="animation-delay: -8s;"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 md:px-24">
+            <!-- Section header -->
+            <div class="text-center mb-24">
+                <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold reveal">ІІ Бөлім</span>
+                <h2 class="font-serif text-5xl md:text-8xl text-ink mt-4 leading-tight reveal">
+                    Сөз тазалығы және<br><span class="text-blood italic">тілдік норма</span>
+                </h2>
+                <p class="font-sans text-lg text-ink/60 mt-8 max-w-2xl mx-auto font-light reveal">
+                    «Тіл тазалығы – ой тазалығы». Адамның қалай сөйлейтіні оның мәдениеті мен білім деңгейін көрсетеді.
+                </p>
+            </div>
+            
+            <!-- Definition card -->
+            <div class="max-w-4xl mx-auto mb-24 reveal">
+                <div class="bg-white p-10 md:p-14 rounded-3xl shadow-xl border-l-4 border-blood glow">
+                    <h3 class="font-serif text-3xl text-ink mb-6">Сөз тазалығы деген не?</h3>
+                    <p class="font-sans text-lg text-ink/70 leading-relaxed font-light text-justify">
+                        Сөз тазалығы – сөйлеушінің ана тілінің нормаларын сақтай отырып, бөтен сөздерді, жаргондарды және дөрекі сөздерді араластырмай сөйлеуі. Бұл тек грамматикалық дұрыстық емес, бұл ойлау мәдениетінің көрінісі, адамның рухани әлемінің айнасы. Таза сөйлеу — бұл ана тіліне деген құрмет.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Harmful factors - tabs -->
+            <div class="mb-24">
+                <h3 class="font-serif text-3xl text-ink text-center mb-12 reveal">
+                    Сөз тазалығына <span class="text-blood italic">нұқсан</span> келтіретін факторлар
+                </h3>
+                
+                <div class="flex flex-wrap justify-center gap-6 mb-12 reveal">
+                    <button class="tab-btn font-sans text-sm uppercase tracking-[0.2em] text-ink/60 font-semibold pb-2 cursor-pointer active magnetic" data-tab="varvarism" data-cursor="hover">Варваризмдер</button>
+                    <button class="tab-btn font-sans text-sm uppercase tracking-[0.2em] text-ink/60 font-semibold pb-2 cursor-pointer magnetic" data-tab="parasite" data-cursor="hover">Паразит сөздер</button>
+                    <button class="tab-btn font-sans text-sm uppercase tracking-[0.2em] text-ink/60 font-semibold pb-2 cursor-pointer magnetic" data-tab="dialect" data-cursor="hover">Диалектизмдер</button>
+                </div>
+                
+                <div class="max-w-3xl mx-auto">
+                    <!-- Tab 1 -->
+                    <div class="tab-content" id="tab-varvarism">
+                        <div class="organic-card p-10 reveal">
+                            <div class="flex flex-col md:flex-row items-start gap-6">
+                                <div class="w-20 h-20 bg-blood/10 rounded-2xl flex items-center justify-center flex-shrink-0 pulse">
+                                    <span class="font-serif text-4xl text-blood italic">В</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-serif text-2xl text-ink mb-4">Варваризмдер</h4>
+                                    <p class="font-sans text-ink/70 leading-relaxed font-light text-justify mb-6">
+                                        Орынсыз қолданылған шет тіліндегі сөздер — бұл тілдің тазалығына ең көп зиян келтіретін фактор. Қазақ тілінде баламасы бар сөздердің орнына шет тілі сөздерін қолдану — бұл тіл құнсыздануының белгісі.
+                                    </p>
+                                    <div class="p-4 bg-stone/50 rounded-xl">
+                                        <p class="font-sans text-sm text-blood font-semibold mb-2">Мысалдар:</p>
+                                        <p class="font-sans text-ink/60">"общий" → <span class="text-sage font-semibold">ортақ</span></p>
+                                        <p class="font-sans text-ink/60">"уже" → <span class="text-sage font-semibold">әлдеқашан</span></p>
+                                        <p class="font-sans text-ink/60">"давай" → <span class="text-sage font-semibold">жүр, кел</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab 2 -->
+                    <div class="tab-content hidden" id="tab-parasite">
+                        <div class="organic-card p-10">
+                            <div class="flex flex-col md:flex-row items-start gap-6">
+                                <div class="w-20 h-20 bg-blood/10 rounded-2xl flex items-center justify-center flex-shrink-0 pulse">
+                                    <span class="font-serif text-4xl text-blood italic">П</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-serif text-2xl text-ink mb-4">Паразит сөздер</h4>
+                                    <p class="font-sans text-ink/70 leading-relaxed font-light text-justify mb-6">
+                                        Ойды байланыстыру үшін емес, әдет бойынша айтылатын мағынасыз сөздер. Бұл сөздер сөйлемге ешқандай мағына қоспайды, керісінше, сөйлеуді бұзады.
+                                    </p>
+                                    <div class="p-4 bg-stone/50 rounded-xl">
+                                        <p class="font-sans text-sm text-blood font-semibold mb-2">Мысалдар:</p>
+                                        <p class="font-sans text-ink/60">"жаңағы", "алгі", "не ғой", "типа", "как бы"</p>
+                                        <p class="font-sans text-ink/40 text-sm mt-2">Бұл сөздерді қолданудан аулақ болу керек.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab 3 -->
+                    <div class="tab-content hidden" id="tab-dialect">
+                        <div class="organic-card p-10">
+                            <div class="flex flex-col md:flex-row items-start gap-6">
+                                <div class="w-20 h-20 bg-blood/10 rounded-2xl flex items-center justify-center flex-shrink-0 pulse">
+                                    <span class="font-serif text-4xl text-blood italic">Д</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-serif text-2xl text-ink mb-4">Диалектизмдер мен жаргондар</h4>
+                                    <p class="font-sans text-ink/70 leading-relaxed font-light text-justify mb-6">
+                                        Әдеби тіл нормасына жатпайтын жергілікті немесе белгілі бір топқа тән сөздер. Диалектизмдер — тілдің байлығы, бірақ ресми қарым-қатынаста қолдану орынсыз.
+                                    </p>
+                                    <div class="p-4 bg-stone/50 rounded-xl">
+                                        <p class="font-sans text-sm text-sage font-semibold mb-2">Ескерту:</p>
+                                        <p class="font-sans text-ink/60">Диалектілер — тілдің байлығы, бірақ әдеби тілде сақтық керек.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Language norms -->
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="reveal-left">
+                    <h3 class="font-serif text-4xl text-ink mb-8">
+                        Тілдік жүйе және <span class="text-sage italic">норма</span>
+                    </h3>
+                    <p class="font-sans text-lg text-ink/70 leading-relaxed font-light text-justify mb-10">
+                        Тіл – тірі ағза, ол үнемі дамып, өзгеріп отырады. Бірақ оның өзіндік заңдылықтары — нормалары бар. Бұл нормаларды сақтау — тіл байлығын сақтаудың және келесі ұрпаққа жеткізудің негізгі шарты.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4 group cursor-pointer p-4 rounded-xl transition-all duration-300 hover:bg-white hover:shadow-lg" data-cursor="hover">
+                            <div class="w-4 h-4 bg-blood rounded-full mt-1.5 flex-shrink-0 group-hover:scale-150 transition-transform"></div>
+                            <div>
+                                <h4 class="font-serif text-xl text-ink mb-1 group-hover:text-blood transition-colors">Лексикалық норма</h4>
+                                <p class="font-sans text-ink/60 font-light">Сөздерді мағынасына сай дұрыс қолдану. Әр сөздің өз орны бар.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4 group cursor-pointer p-4 rounded-xl transition-all duration-300 hover:bg-white hover:shadow-lg" data-cursor="hover">
+                            <div class="w-4 h-4 bg-sage rounded-full mt-1.5 flex-shrink-0 group-hover:scale-150 transition-transform"></div>
+                            <div>
+                                <h4 class="font-serif text-xl text-ink mb-1 group-hover:text-sage transition-colors">Грамматикалық норма</h4>
+                                <p class="font-sans text-ink/60 font-light">Сөйлем құрылымының дұрыстығы. Сөз тіркестері мен сөйлемдердің дұрыс жасалуы.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4 group cursor-pointer p-4 rounded-xl transition-all duration-300 hover:bg-white hover:shadow-lg" data-cursor="hover">
+                            <div class="w-4 h-4 bg-ink rounded-full mt-1.5 flex-shrink-0 group-hover:scale-150 transition-transform"></div>
+                            <div>
+                                <h4 class="font-serif text-xl text-ink mb-1">Орфоэпиялық норма</h4>
+                                <p class="font-sans text-ink/60 font-light">Сөздердің дұрыс дыбысталуы мен айтылуы. Дұрыс екпін қою.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right vs Wrong comparison -->
+                <div class="reveal-right">
+                    <div class="organic-card p-10">
+                        <h4 class="font-serif text-2xl text-ink mb-8 text-center">Дұрыс пен Бұрыс</h4>
+                        
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-4 bg-blood/5 border border-blood/20 rounded-xl transition-all duration-300 hover:bg-blood/10 hover:scale-105">
+                                    <span class="font-sans text-xs text-blood uppercase tracking-wider font-semibold">✗ Бұрыс</span>
+                                    <p class="font-sans text-ink/80 mt-2 text-sm">"Денсаулығым вообще құрып кетті"</p>
+                                </div>
+                                <div class="p-4 bg-sage/10 border border-sage/30 rounded-xl transition-all duration-300 hover:bg-sage/20 hover:scale-105">
+                                    <span class="font-sans text-xs text-sage uppercase tracking-wider font-semibold">✓ Дұрыс</span>
+                                    <p class="font-sans text-ink/80 mt-2 text-sm">"Денсаулығым мүлде нашарлап кетті"</p>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-4 bg-blood/5 border border-blood/20 rounded-xl transition-all duration-300 hover:bg-blood/10 hover:scale-105">
+                                    <span class="font-sans text-xs text-blood uppercase tracking-wider font-semibold">✗ Бұрыс</span>
+                                    <p class="font-sans text-ink/80 mt-2 text-sm">"Это самый лучший вариант"</p>
+                                </div>
+                                <div class="p-4 bg-sage/10 border border-sage/30 rounded-xl transition-all duration-300 hover:bg-sage/20 hover:scale-105">
+                                    <span class="font-sans text-xs text-sage uppercase tracking-wider font-semibold">✓ Дұрыс</span>
+                                    <p class="font-sans text-ink/80 mt-2 text-sm">"Бұл ең жақсы нұсқа"</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 p-5 bg-stone/50 rounded-xl border-l-4 border-sage">
+                            <p class="font-sans text-ink/70 text-sm font-light italic">
+                                💡 Ғалымдар жағымды сөздер (алғыс, мақтау) айту адамның иммунитетін көтеретінін, ал былапыт сөздер стресс гормондарын шығаратынын дәлелдеген.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ==================== SYNTHESIS SECTION ==================== -->
+    <section id="synthesis" class="py-32 md:py-40 bg-ink text-paper relative overflow-hidden">
+        <!-- Animated background -->
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-sage rounded-full blur-3xl float"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blood rounded-full blur-3xl float-reverse"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-6 md:px-24 relative z-10">
+            <!-- Section header -->
+            <div class="text-center mb-24">
+                <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold reveal">ІІІ Бөлім</span>
+                <h2 class="font-serif text-5xl md:text-8xl text-paper mt-4 leading-tight reveal">
+                    Синтез:<br><span class="text-blood italic">Денсаулық және Сөз</span>
+                </h2>
+            </div>
+            
+            <!-- Main idea banner -->
+            <div class="max-w-4xl mx-auto mb-24 reveal">
+                <div class="relative p-12 md:p-16 border border-paper/20 rounded-3xl text-center">
+                    <!-- Decorative corners with animation -->
+                    <div class="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-blood"></div>
+                    <div class="absolute top-4 right-4 w-12 h-12 border-t-2 border-r-2 border-blood"></div>
+                    <div class="absolute bottom-4 left-4 w-12 h-12 border-b-2 border-l-2 border-blood"></div>
+                    <div class="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-blood"></div>
+                    
+                    <!-- Spinning decoration -->
+                    <div class="absolute -top-8 -right-8 w-16 h-16 border border-dashed border-sage/50 rounded-full spin-slow"></div>
+                    <div class="absolute -bottom-8 -left-8 w-20 h-20 border border-dashed border-blood/50 rounded-full spin-slow-reverse"></div>
+                    
+                    <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold">Басты идея</span>
+                    <h3 class="font-serif text-3xl md:text-5xl text-paper mt-6 leading-relaxed italic">
+                        «Тәні саудың – жаны сау,<br>жаны саудың – тілі сау»
+                    </h3>
+                </div>
+            </div>
+            
+            <!-- Three circles -->
+            <div class="grid md:grid-cols-3 gap-12 mb-24">
+                <div class="text-center reveal stagger-item">
+                    <div class="relative w-40 h-40 mx-auto mb-8 group">
+                        <div class="absolute inset-0 border-2 border-paper/30 rounded-full transition-all duration-500 group-hover:scale-110 group-hover:border-blood"></div>
+                        <div class="absolute inset-4 border border-dashed border-sage/50 rounded-full spin-slow"></div>
+                        <div class="absolute inset-8 border border-dotted border-blood/30 rounded-full spin-slow-reverse"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="font-serif text-4xl text-blood italic group-hover:scale-110 transition-transform">Тән</span>
+                        </div>
+                    </div>
+                    <h4 class="font-serif text-2xl text-paper mb-3">Физикалық саулық</h4>
+                    <p class="font-sans text-paper/60 font-light max-w-xs mx-auto">
+                        Дене күші мен қуаты — өмір негізі. Дені сау адам — бақытты адам.
+                    </p>
+                </div>
+                
+                <div class="text-center reveal stagger-item">
+                    <div class="relative w-40 h-40 mx-auto mb-8 group">
+                        <div class="absolute inset-0 border-2 border-paper/30 rounded-full transition-all duration-500 group-hover:scale-110 group-hover:border-sage"></div>
+                        <div class="absolute inset-4 border border-dashed border-blood/50 rounded-full spin-slow-reverse"></div>
+                        <div class="absolute inset-8 border border-dotted border-paper/30 rounded-full spin-slow"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="font-serif text-4xl text-sage italic group-hover:scale-110 transition-transform">Жан</span>
+                        </div>
+                    </div>
+                    <h4 class="font-serif text-2xl text-paper mb-3">Рухани саулық</h4>
+                    <p class="font-sans text-paper/60 font-light max-w-xs mx-auto">
+                        Ішкі әлем тазалығы — психологиялық тұрақтылық, өмірге деген сүйіспеншілік.
+                    </p>
+                </div>
+                
+                <div class="text-center reveal stagger-item">
+                    <div class="relative w-40 h-40 mx-auto mb-8 group">
+                        <div class="absolute inset-0 border-2 border-paper/30 rounded-full transition-all duration-500 group-hover:scale-110 group-hover:border-paper"></div>
+                        <div class="absolute inset-4 border border-dashed border-paper/50 rounded-full spin-slow"></div>
+                        <div class="absolute inset-8 border border-dotted border-sage/30 rounded-full spin-slow-reverse"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="font-serif text-4xl text-paper italic group-hover:scale-110 transition-transform">Тіл</span>
+                        </div>
+                    </div>
+                    <h4 class="font-serif text-2xl text-paper mb-3">Сөз мәдениеті</h4>
+                    <p class="font-sans text-paper/60 font-light max-w-xs mx-auto">
+                        Ой мен сөз тазалығы — мәдениеттің айнасы. Таза сөйлеу — таза ойлау.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Scientific fact -->
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal-left">
+                    <div class="relative overflow-hidden rounded-2xl img-reveal">
+                        <img 
+                            src="https://image.pollinations.ai/prompt/human%20head%20profile%20silhouette%20neural%20pathways%20glowing%20connections%20double%20exposure%20tree%20branches%20nature%20leaves%20organic%20blue%20green%20light%20artistic%20cinematic%20lighting%208k%20highly%20detailed%20photorealistic?width=800&height=900&nologo=true&seed=101112" 
+                            alt="Ми мен ой"
+                            class="w-full h-auto img-zoom"
+                            loading="lazy"
+                        >
+                    </div>
+                </div>
+                
+                <div class="reveal-right">
+                    <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold">Қызықты факт</span>
+                    <h3 class="font-serif text-4xl text-paper mt-4 mb-8">
+                        Сөз бен иммунитет <span class="text-blood italic">байланысы</span>
+                    </h3>
+                    
+                    <div class="space-y-6 font-sans text-lg text-paper/70 leading-relaxed font-light">
+                        <p class="text-justify">
+                            Ғылыми зерттеулер таңғажайып нәтижелер көрсетті: адамның сөйлеу мәнері оның физикалық денсаулығына тікелей әсер етеді. Жағымды сөздер — алғыс, мақтау, қолдау — организмде эндорфин гормонын шығарып, иммунитетті күшейтеді.
+                        </p>
+                        <p class="text-justify">
+                            Керісінше, былапыт сөздер, өкпелеу, теріс эмоциялар — организмде кортизол (стресс гормоны) деңгейін көтеріп, иммунитетті әлсіретеді.
+                        </p>
+                    </div>
+                    
+                    <div class="mt-10 p-6 bg-paper/5 border border-paper/10 rounded-xl">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-sage/20 rounded-full flex items-center justify-center pulse">
+                                <svg class="w-6 h-6 text-sage" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-sans text-sage text-sm font-semibold">Естеріңізде болсын</p>
+                                <p class="font-serif text-paper italic">Жағымды сөз — ем, жағымсыз сөз — у.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ==================== PROVERBS SECTION ==================== -->
+    <section class="py-24 bg-stone/30 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-sage/10 blob-animated -z-10"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 md:px-24">
+            <div class="text-center mb-16">
+                <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold reveal">Халық даналығы</span>
+                <h2 class="font-serif text-4xl md:text-6xl text-ink mt-4 reveal">
+                    Мақал-мәтелдер
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div class="organic-card p-10 cursor-pointer reveal stagger-item" data-cursor="hover">
+                    <span class="font-serif text-6xl text-blood/20 italic">"</span>
+                    <p class="font-serif text-2xl text-ink italic leading-relaxed -mt-6">Тәні саудың – жаны сау</p>
+                    <div class="h-0.5 w-12 bg-blood mt-6 transition-all duration-500 group-hover:w-full"></div>
+                </div>
+                
+                <div class="organic-card p-10 cursor-pointer reveal stagger-item" data-cursor="hover">
+                    <span class="font-serif text-6xl text-blood/20 italic">"</span>
+                    <p class="font-serif text-2xl text-ink italic leading-relaxed -mt-6">Бас аманда – мал тәтті, бас ауырса – жан тәтті</p>
+                    <div class="h-0.5 w-12 bg-sage mt-6"></div>
+                </div>
+                
+                <div class="organic-card p-10 cursor-pointer reveal stagger-item" data-cursor="hover">
+                    <span class="font-serif text-6xl text-blood/20 italic">"</span>
+                    <p class="font-serif text-2xl text-ink italic leading-relaxed -mt-6">Жақсы сөз – жарым ырыс</p>
+                    <div class="h-0.5 w-12 bg-ink mt-6"></div>
+                </div>
+                
+                <div class="organic-card p-10 cursor-pointer reveal stagger-item" data-cursor="hover">
+                    <span class="font-serif text-6xl text-blood/20 italic">"</span>
+                    <p class="font-serif text-2xl text-ink italic leading-relaxed -mt-6">Айтылған сөз – атылған оқ</p>
+                    <div class="h-0.5 w-12 bg-blood mt-6"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ==================== CONCLUSION SECTION ==================== -->
+    <section id="conclusion" class="py-32 md:py-48 relative overflow-hidden">
+        <!-- Background image -->
+        <div class="absolute inset-0 opacity-15">
+            <img 
+                src="https://image.pollinations.ai/prompt/kazakh%20steppe%20sunrise%20golden%20wheat%20fields%20children%20silhouettes%20running%20towards%20horizon%20hope%20future%20warm%20golden%20light%20double%20exposure%20nature%20leaves%20organic%20artistic%20cinematic%20lighting%208k%20highly%20detailed%20photorealistic?width=1920&height=1080&nologo=true&seed=131415" 
+                alt="Болашақ"
+                class="w-full h-full object-cover"
+                loading="lazy"
+            >
+        </div>
+        
+        <!-- Background blobs -->
+        <div class="absolute top-1/4 left-0 w-[500px] h-[500px] bg-sage/10 blob-animated -z-10"></div>
+        <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-blood/5 blob-animated -z-10" style="animation-delay: -5s;"></div>
+        
+        <div class="max-w-4xl mx-auto px-6 md:px-24 text-center relative">
+            <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold reveal">Қорытынды</span>
+            <h2 class="font-serif text-5xl md:text-7xl text-ink mt-4 mb-10 leading-tight reveal">
+                Болашақ ұрпаққа<br><span class="text-blood italic">мұра</span>
+            </h2>
+            
+            <div class="space-y-6 font-sans text-xl text-ink/70 leading-relaxed font-light text-justify max-w-2xl mx-auto">
+                <p class="reveal">
+                    Мәдениетті адам – ол өз денсаулығын күтетін және өз тілін құрметтейтін тұлға. Бұл екі құндылық бір-бірімен тығыз байланысты.
+                </p>
+                <p class="reveal">
+                    Болашақ ұрпаққа қалдырар ең үлкен мұра – таза қоршаған орта және шұбарланбаған ана тілі. Біз осы мұраны сақтап, дамытып, келесі буынға жеткізуге міндеттіміз.
+                </p>
+            </div>
+            
+            <div class="mt-16 reveal">
+                <div class="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-8 px-10 py-6 bg-white rounded-full shadow-xl glow">
+                    <span class="font-serif text-xl text-blood italic">Өміріңді сақта</span>
+                    <span class="text-sage hidden sm:block">◆</span>
+                    <span class="font-serif text-xl text-sage italic">Тіліңді құрметте</span>
+                </div>
+            </div>
+            
+            <div class="mt-16 reveal">
+                <a href="#hero" class="inline-flex items-center gap-2 font-sans text-sm text-ink/50 hover:text-blood transition-colors cursor-pointer magnetic" data-cursor="hover">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                    </svg>
+                    Басына оралу
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="py-16 bg-ink text-paper border-t border-paper/10">
+        <div class="max-w-7xl mx-auto px-6 md:px-24">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="text-center md:text-left">
+                    <div class="font-serif text-2xl text-paper mb-2">
+                        ◈ Денсаулық және Сөз
+                    </div>
+                    <p class="font-sans text-paper/40 text-sm font-light">Зерттеу жұмысы © 2024</p>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-8">
+                    <a href="#intro" class="font-sans text-xs uppercase tracking-widest text-paper/40 hover:text-blood transition-colors cursor-pointer magnetic" data-cursor="hover">Кіріспе</a>
+                    <a href="#health" class="font-sans text-xs uppercase tracking-widest text-paper/40 hover:text-blood transition-colors cursor-pointer magnetic" data-cursor="hover">Денсаулық</a>
+                    <a href="#language" class="font-sans text-xs uppercase tracking-widest text-paper/40 hover:text-blood transition-colors cursor-pointer magnetic" data-cursor="hover">Сөз</a>
+                    <a href="#synthesis" class="font-sans text-xs uppercase tracking-widest text-paper/40 hover:text-blood transition-colors cursor-pointer magnetic" data-cursor="hover">Синтез</a>
+                </div>
+            </div>
+            
+            <div class="organic-hr my-10"></div>
+            
+            <p class="text-center font-serif text-paper/30 text-sm italic">
+                «Адам өмірін қорғау – басты міндет. Адамның денсаулығы – қоғам байлығы. Сөз тазалығы»
+            </p>
+        </div>
+    </footer>
+    
+    <!-- ==================== SCRIPTS ==================== -->
+    <script>
+        // ============================================
+        // LOADER ANIMATION
+        // ============================================
+        const loaderChars = document.querySelectorAll('.loader-text span');
+        const loaderBar = document.getElementById('loader-bar-fill');
+        const loader = document.getElementById('loader');
+        const navbar = document.getElementById('navbar');
+        
+        // Animate loader characters
+        gsap.fromTo(loaderChars, 
+            { y: 50, opacity: 0 },
+            { 
+                y: 0, 
+                opacity: 1, 
+                duration: 0.5, 
+                stagger: 0.08,
+                ease: 'power3.out'
+            }
+        );
+        
+        // Animate loader bar
+        gsap.to(loaderBar, {
+            width: '100%',
+            duration: 2,
+            ease: 'power2.inOut',
+            onComplete: () => {
+                gsap.to(loader, {
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: 'power2.inOut',
+                    onComplete: () => {
+                        loader.style.display = 'none';
+                        navbar.style.opacity = '1';
+                        animateHero();
+                    }
+                });
+            }
+        });
+        
+        // ============================================
+        // HERO ANIMATIONS
+        // ============================================
+        function animateHero() {
+            const heroTl = gsap.timeline();
+            
+            heroTl
+                .from('.hero-subtitle', { y: 30, opacity: 0, duration: 1, ease: 'power3.out' })
+                .from('.hero-title-1', { y: 100, opacity: 0, duration: 1.2, ease: 'power4.out' }, '-=0.5')
+                .from('.hero-title-2', { y: 100, opacity: 0, duration: 1.2, ease: 'power4.out' }, '-=0.8')
+                .from('.hero-line-left', { width: 0, duration: 0.8, ease: 'power2.out' }, '-=0.6')
+                .from('.hero-line-right', { width: 0, duration: 0.8, ease: 'power2.out' }, '-=0.8')
+                .from('.hero-tagline', { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' }, '-=0.6')
+                .from('.hero-description', { opacity: 0, y: 30, duration: 1, ease: 'power3.out' }, '-=0.4')
+                .from('.hero-buttons', { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' }, '-=0.6')
+                .from('.hero-scroll', { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' }, '-=0.4')
+                .from('.hero-badge', { scale: 0, rotation: -180, duration: 1, ease: 'back.out(1.7)' }, '-=1');
+        }
+        
+        // Scroll line animation
+        gsap.to('.scroll-line-anim', {
+            y: 64,
+            duration: 1.5,
+            repeat: -1,
+            ease: 'power2.inOut'
+        });
+        
+        // ============================================
+        // ORGANIC CANVAS PARTICLES
+        // ============================================
+        const canvas = document.getElementById('organic-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        
+        let mouseX = width / 2;
+        let mouseY = height / 2;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 100 + 30;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.color = Math.random() > 0.5 ? '#8A9A5B' : '#D65A31';
+                this.opacity = Math.random() * 0.12 + 0.03;
+                this.angle = Math.random() * Math.PI * 2;
+                this.angleSpeed = (Math.random() - 0.5) * 0.02;
+            }
+            
+            update() {
+                // Mouse repulsion
+                const dx = this.x - mouseX;
+                const dy = this.y - mouseY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < 250) {
+                    const force = (250 - dist) / 250;
+                    this.x += dx * force * 0.03;
+                    this.y += dy * force * 0.03;
+                }
+                
+                this.x += this.speedX + Math.sin(this.angle) * 0.5;
+                this.y += this.speedY + Math.cos(this.angle) * 0.5;
+                this.angle += this.angleSpeed;
+                
+                // Wrap around
+                if (this.x < -this.size) this.x = width + this.size;
+                if (this.x > width + this.size) this.x = -this.size;
+                if (this.y < -this.size) this.y = height + this.size;
+                if (this.y > height + this.size) this.y = -this.size;
+            }
+            
+            draw() {
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size
+                );
+                gradient.addColorStop(0, this.color);
+                gradient.addColorStop(1, 'transparent');
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = gradient;
+                ctx.globalAlpha = this.opacity;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+        
+        const particles = [];
+        for (let i = 0; i < 20; i++) {
+            particles.push(new Particle());
+        }
+        
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+        
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+        
+        // ============================================
+        // CUSTOM CURSOR
+        // ============================================
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursor-dot');
+        let cursorX = 0;
+        let cursorY = 0;
+        let currentX = 0;
+        let currentY = 0;
+        let dotX = 0;
+        let dotY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            cursorX = e.clientX;
+            cursorY = e.clientY;
+        });
+        
+        function animateCursor() {
+            // Smooth follow for main cursor
+            currentX += (cursorX - currentX) * 0.12;
+            currentY += (cursorY - currentY) * 0.12;
+            cursor.style.left = currentX - 10 + 'px';
+            cursor.style.top = currentY - 10 + 'px';
+            
+            // Faster follow for dot
+            dotX += (cursorX - dotX) * 0.5;
+            dotY += (cursorY - dotY) * 0.5;
+            cursorDot.style.left = dotX - 3 + 'px';
+            cursorDot.style.top = dotY - 3 + 'px';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        
+        // Hover effects
+        document.querySelectorAll('[data-cursor="hover"]').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+        
+        // ============================================
+        // MAGNETIC EFFECT
+        // ============================================
+        document.querySelectorAll('.magnetic').forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                el.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'translate(0, 0)';
+            });
+        });
+        
+        // ============================================
+        // GSAP SCROLL ANIMATIONS
+        // ============================================
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Reveal animations
+        gsap.utils.toArray('.reveal').forEach(elem => {
+            gsap.fromTo(elem, 
+                { opacity: 0, y: 80 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1.2,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
+                    }
+                }
+            );
+        });
+        
+        gsap.utils.toArray('.reveal-left').forEach(elem => {
+            gsap.fromTo(elem, 
+                { opacity: 0, x: -100 },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 1.2,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
+                    }
+                }
+            );
+        });
+        
+        gsap.utils.toArray('.reveal-right').forEach(elem => {
+            gsap.fromTo(elem, 
+                { opacity: 0, x: 100 },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 1.2,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
+                    }
+                }
+            );
+        });
+        
+        // Stagger items
+        gsap.utils.toArray('.stagger-item').forEach((elem, i) => {
+            gsap.fromTo(elem, 
+                { opacity: 0, y: 40 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    delay: i * 0.15,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: 'top 90%',
+                        toggleActions: 'play none none reverse'
+                    }
+                }
+            );
+        });
+        
+        // Image reveal
+        gsap.utils.toArray('.img-reveal').forEach(elem => {
+            gsap.fromTo(elem.querySelector('::after') || elem, 
+                {},
+                {
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: 'top 80%',
+                        onEnter: () => {
+                            gsap.to(elem, {
+                                '--reveal': '100%',
+                                duration: 1.2,
+                                ease: 'power3.inOut'
+                            });
+                        }
+                    }
+                }
+            );
+            
+            // Animate the ::after pseudo element via clip-path
+            gsap.fromTo(elem, 
+                { clipPath: 'inset(0 100% 0 0)' },
+                {
+                    clipPath: 'inset(0 0% 0 0)',
+                    duration: 1.5,
+                    ease: 'power3.inOut',
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: 'top 80%',
+                        toggleActions: 'play none none reverse'
+                    }
+                }
+            );
+        });
+        
+        // Parallax images
+        gsap.utils.toArray('.img-zoom').forEach(img => {
+            gsap.to(img, {
+                yPercent: 20,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: img.parentElement,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1.5
+                }
+            });
+        });
+        
+        // Counter animation
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            const target = parseInt(counter.dataset.target);
+            const suffix = counter.dataset.suffix || '';
+            
+            ScrollTrigger.create({
+                trigger: counter,
+                start: 'top 80%',
+                onEnter: () => {
+                    gsap.to({ val: 0 }, {
+                        val: target,
+                        duration: 2.5,
+                        ease: 'power2.out',
+                        onUpdate: function() {
+                            counter.textContent = Math.round(this.targets()[0].val) + suffix;
+                        }
+                    });
+                },
+                once: true
+            });
+        });
+        
+        // Parallax blobs
+        gsap.utils.toArray('.blob-animated').forEach(blob => {
+            gsap.to(blob, {
+                y: -100,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: blob.parentElement,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 2
+                }
+            });
+        });
+        
+        // ============================================
+        // ACCORDION - FIXED
+        // ============================================
+        const accordionContainer = document.getElementById('accordion-container');
+        
+        if (accordionContainer) {
+            const accordionItems = accordionContainer.querySelectorAll('.accordion-item');
+            
+            accordionItems.forEach(item => {
+                const header = item.querySelector('.accordion-header');
+                
+                header.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const isOpen = item.classList.contains('open');
+                    
+                    // Close all other accordions
+                    accordionItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('open');
+                        }
+                    });
+                    
+                    // Toggle current accordion
+                    if (isOpen) {
+                        item.classList.remove('open');
+                    } else {
+                        item.classList.add('open');
+                    }
+                });
+            });
+        }
+        
+        // ============================================
+        // TABS
+        // ============================================
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+                
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                tabContents.forEach(content => {
+                    if (content.id === 'tab-' + tabId) {
+                        content.classList.remove('hidden');
+                        gsap.fromTo(content, 
+                            { opacity: 0, y: 20 },
+                            { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }
+                        );
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            });
+        });
+        
+        // ============================================
+        // MOBILE MENU
+        // ============================================
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        let menuOpen = false;
+        
+        menuBtn.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            if (menuOpen) {
+                mobileMenu.style.opacity = '1';
+                mobileMenu.style.pointerEvents = 'auto';
+                menuBtn.textContent = 'Жабу';
+                
+                gsap.fromTo('.mobile-link', 
+                    { y: 30, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'power3.out' }
+                );
+            } else {
+                mobileMenu.style.opacity = '0';
+                mobileMenu.style.pointerEvents = 'none';
+                menuBtn.textContent = 'Мәзір';
+            }
+        });
+        
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.style.opacity = '0';
+                mobileMenu.style.pointerEvents = 'none';
+                menuBtn.textContent = 'Мәзір';
+                menuOpen = false;
+            });
+        });
+        
+        // ============================================
+        // SMOOTH SCROLL
+        // ============================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offset = 100;
+                    const targetPosition = target.getBoundingClientRect().top + window.scrollY - offset;
+                    
+                    gsap.to(window, {
+                        scrollTo: { y: targetPosition, autoKill: false },
+                        duration: 1.5,
+                        ease: 'power3.inOut'
+                    });
+                }
+            });
+        });
+        
+        // Add GSAP ScrollTo plugin inline
+        gsap.registerPlugin({
+            name: "scrollTo",
+            init(target, value) {
+                this.target = target;
+                this.y = value.y;
+            },
+            render(progress) {
+                window.scrollTo(0, this.y * progress);
+            }
+        });
+        
+        // Fallback smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        
+        console.log('🌿 Bio-Logos Organic Enhanced — Сайт сәтті жүктелді!');
+    </script>
+</body>
+</html>
