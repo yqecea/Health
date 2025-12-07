@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Philosopher:ital,wght@0,400;0,700;1,400&family=Mulish:wght@200;300;400;600&display=swap" rel="stylesheet">
     
-    <!-- GSAP + ScrollTrigger + SplitText alternative -->
+    <!-- GSAP + ScrollTrigger -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
@@ -345,19 +345,6 @@
             transform: translateY(100%);
         }
         
-        /* Char animation */
-        .char {
-            display: inline-block;
-            opacity: 0;
-            transform: translateY(50px) rotate(10deg);
-        }
-        
-        /* Stagger children */
-        .stagger-item {
-            opacity: 0;
-            transform: translateY(40px);
-        }
-        
         /* Tabs */
         .tab-btn {
             position: relative;
@@ -388,11 +375,11 @@
         .accordion-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.6s cubic-bezier(0.23, 1, 0.32, 1), padding 0.3s ease;
+            transition: max-height 0.8s cubic-bezier(0.23, 1, 0.32, 1), padding 0.3s ease;
         }
         
         .accordion-item.open .accordion-content {
-            max-height: 500px;
+            max-height: 1500px; /* Increased for deeper content */
         }
         
         .accordion-icon {
@@ -483,16 +470,6 @@
             background-size: 100% 2px;
         }
         
-        /* Scale on scroll */
-        .scale-on-scroll {
-            transition: transform 0.1s linear;
-        }
-        
-        /* Parallax layer */
-        .parallax-layer {
-            will-change: transform;
-        }
-        
         /* Shimmer effect */
         @keyframes shimmer {
             0% { background-position: -200% 0; }
@@ -535,6 +512,76 @@
         .border-draw:hover::before,
         .border-draw:hover::after {
             width: 100%;
+        }
+
+        /* --- NEW STYLES FOR EXPANSION --- */
+
+        /* Timeline */
+        .timeline-container {
+            overflow-x: auto;
+            padding-bottom: 2rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .timeline-container::-webkit-scrollbar {
+            display: none;
+        }
+        .timeline-track {
+            display: flex;
+            gap: 2rem;
+            padding: 0 1rem;
+            min-width: max-content;
+        }
+        .timeline-card {
+            width: 300px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .timeline-line {
+            height: 2px;
+            background: #8A9A5B;
+            position: absolute;
+            top: 2rem;
+            left: 0;
+            right: 0;
+            z-index: -1;
+        }
+
+        /* Data Visualization Bars */
+        .data-bar-container {
+            height: 8px;
+            background: rgba(138, 154, 91, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .data-bar-fill {
+            height: 100%;
+            background: #D65A31;
+            width: 0;
+            transition: width 1.5s ease-out;
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .gallery-item {
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            border-radius: 1rem;
+            position: relative;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.1);
         }
     </style>
 </head>
@@ -689,60 +736,59 @@
                 <div>
                     <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold reveal">Кіріспе</span>
                     <h2 class="font-serif text-5xl md:text-7xl text-ink mt-4 leading-tight reveal">
-                        Зерттеудің<br><span class="text-blood italic">мақсаты</span>
+                        Зерттеудің<br><span class="text-blood italic">мақсаты мен мәні</span>
                     </h2>
                 </div>
                 
                 <div class="md:pt-16 reveal">
                     <p class="font-sans text-lg text-ink/70 leading-relaxed font-light">
-                        Бұл академиялық зерттеу жұмысы адам өмірінің екі негізгі аспектісін — физикалық денсаулық пен тіл мәдениетін — біріктіріп қарастырады.
+                        Бұл іргелі академиялық зерттеу жұмысы адам болмысының ажырамас екі қанатын — биологиялық саулық пен лингвистикалық тазалықты біртұтас жүйе ретінде қарастырады.
                     </p>
                 </div>
             </div>
             
-            <!-- Main content -->
+            <!-- EXPANDED Main content -->
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <!-- Text content -->
-                <div class="reveal-left">
+                <div class="reveal-left space-y-8">
                     <div class="font-sans text-lg text-ink/80 leading-relaxed font-light space-y-6 text-justify">
                         <p class="drop-cap">
-                            Денсаулық пен сөз — бұл адам өмірінің екі тірегі, бірі тәнді, екіншісі жанды сауықтырады. Бұл зерттеу жұмысы екі маңызды аспектіні тереңірек қарастыруға арналған. Біріншісі — әлеуметтік-физиологиялық аспект, яғни адам өмірінің құндылығын түсіну және денсаулықты сақтаудың жолдарын анықтау.
+                            Денсаулық пен сөз — бұл адам өмірінің қос тірегі, бірі тәнді, екіншісі жанды сауықтырады. Бұл зерттеу жұмысы екі маңызды аспектіні тереңірек қарастыруға арналған. Біріншісі — әлеуметтік-физиологиялық аспект, яғни адам өмірінің құндылығын түсіну және денсаулықты сақтаудың ғылыми негізделген жолдарын анықтау.
                         </p>
                         <p>
-                            Екіншісі — рухани-мәдени аспект, бұл тіл тазалығы мен сөйлеу мәдениетінің адам өміріндегі рөлін зерттеу. Қазіргі заманда, технология мен жаһандану дәуірінде, дәстүрлі құндылықтарымызды сақтау өте маңызды.
+                            Екіншісі — рухани-мәдени аспект, бұл тіл тазалығы мен сөйлеу мәдениетінің адамның психологиялық жай-күйіне әсерін зерттеу. Қазіргі заманда, жаһандану мен цифрландыру дәуірінде, ұлттық код пен дәстүрлі құндылықтарымызды сақтау — стратегиялық маңызға ие мәселе. Ғалымдардың пайымдауынша, тіл — жай ғана қарым-қатынас құралы емес, ол ойлау жүйесін қалыптастыратын қуатты механизм.
                         </p>
                         <p>
-                            Зерттеудің негізгі мақсаты — қоғамның басты байлығы саналатын денсаулықтың маңызын түсіндіру және ана тіліміздің тазалығын сақтаудың өзектілігін көрсету. Біз дәлелдейміз: тәні сау адамның жаны да сау, жаны сау адамның тілі де таза болады.
+                            Зерттеудің негізгі мақсаты — қоғамның басты байлығы саналатын денсаулықтың маңызын ғылыми тұрғыдан дәйектеу және ана тіліміздің тазалығын сақтаудың өзектілігін көрсету. Біздің гипотезамыз: тәні сау адамның жаны да сау, жаны сау адамның тілі де таза болады. Бұл — психосоматика мен психолингвистиканың түйіскен жері.
                         </p>
                     </div>
-                    
-                    <!-- Two aspects cards -->
-                    <div class="grid sm:grid-cols-2 gap-6 mt-12">
-                        <div class="organic-card p-8 cursor-pointer stagger-item" data-cursor="hover">
-                            <div class="w-14 h-14 bg-sage/10 rounded-full flex items-center justify-center mb-6 pulse">
-                                <svg class="w-7 h-7 text-sage" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                                </svg>
+
+                    <!-- DEEP DIVE Accordion -->
+                    <div class="accordion-item organic-card overflow-hidden" data-accordion="intro-deep">
+                        <button class="accordion-header w-full p-6 flex justify-between items-center text-left cursor-pointer transition-colors duration-300 bg-stone/20">
+                            <span class="font-serif text-lg text-ink">Терең үңілу: Философиялық негіздеме</span>
+                            <span class="accordion-icon text-blood text-2xl font-light select-none">+</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="px-6 pb-6 pt-4 font-sans text-ink/70 leading-relaxed font-light text-justify space-y-4">
+                                <p>
+                                    Адамзат тарихында денсаулық пен сөз арасындағы байланыс ежелден байқалған. Антикалық дәуірде Гиппократ пен Платон тән саулығын жан тазалығымен байланыстырған. Қазақ даласының данагөйлері, жыраулары сөз құдіретін «өнер алды — қызыл тіл» деп бағалап, сөздің адам тағдырына, денсаулығына әсерін жақсы түсінген.
+                                </p>
+                                <p>
+                                    Қазіргі заманауи нейробиология ғылымы сөздің адам миына әсерін дәлелдеп отыр. Жағымды, ізгі сөздер нейрондық байланыстарды нығайтып, стресс деңгейін төмендетеді, ал агрессивті, лас сөздер кортизол бөлінуін күшейтіп, иммундық жүйеге соққы береді.
+                                </p>
+                                <p>
+                                    Осылайша, бұл зерттеу тек медициналық немесе лингвистикалық қана емес, сонымен бірге терең философиялық және антропологиялық сипатқа ие. Біз адамның «био-әлеуметтік» табиғатын толыққанды ашуға тырысамыз.
+                                </p>
                             </div>
-                            <h3 class="font-serif text-xl text-ink mb-2">Физиологиялық</h3>
-                            <p class="font-sans text-sm text-ink/60 font-light">Тән саулығы, дене қуаты, өмір сүру ұзақтығы</p>
-                        </div>
-                        
-                        <div class="organic-card p-8 cursor-pointer stagger-item" data-cursor="hover">
-                            <div class="w-14 h-14 bg-blood/10 rounded-full flex items-center justify-center mb-6 pulse" style="animation-delay: 0.5s;">
-                                <svg class="w-7 h-7 text-blood" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                                </svg>
-                            </div>
-                            <h3 class="font-serif text-xl text-ink mb-2">Рухани-мәдени</h3>
-                            <p class="font-sans text-sm text-ink/60 font-light">Тіл тазалығы, сөз мәдениеті, рухани байлық</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Image -->
-                <div class="reveal-right relative">
-                    <div class="relative overflow-hidden arch-mask aspect-[3/4] img-reveal">
+                <!-- Right side visuals -->
+                <div class="reveal-right relative space-y-8">
+                    <!-- Image -->
+                    <div class="relative overflow-hidden arch-mask aspect-[3/4] img-reveal shadow-2xl">
                         <img 
                             src="https://image.pollinations.ai/prompt/wise%20kazakh%20elder%20silhouette%20reading%20ancient%20book%20warm%20golden%20sunset%20light%20rays%20dust%20particles%20atmospheric%20double%20exposure%20nature%20leaves%20organic%20artistic%20cinematic%20lighting%208k%20highly%20detailed%20photorealistic?width=800&height=1100&nologo=true&seed=123" 
                             alt="Ақсақал кітап оқып отыр"
@@ -750,259 +796,279 @@
                             loading="lazy"
                         >
                     </div>
-                    
-                    <!-- Floating quote -->
-                    <div class="absolute -bottom-8 -left-8 bg-white p-6 rounded-2xl shadow-xl max-w-xs float glow">
-                        <p class="font-serif text-lg text-ink italic">«Жақсы сөз — жарым ырыс»</p>
-                        <p class="font-sans text-xs text-ink/50 mt-2 uppercase tracking-wider">— Қазақ халық мақалы</p>
+
+                    <!-- Data Viz Component: Awareness Levels -->
+                    <div class="organic-card p-6">
+                        <h4 class="font-serif text-lg text-ink mb-4">Қоғамдық сана деңгейі</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-xs font-sans text-ink/60 mb-1">
+                                    <span>Физикалық сауаттылық</span>
+                                    <span>78%</span>
+                                </div>
+                                <div class="data-bar-container">
+                                    <div class="data-bar-fill" style="width: 78%; transition-delay: 0.5s"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs font-sans text-ink/60 mb-1">
+                                    <span>Лингвистикалық жауапкершілік</span>
+                                    <span>45%</span>
+                                </div>
+                                <div class="data-bar-container">
+                                    <div class="data-bar-fill bg-sage" style="width: 45%; background-color: #8A9A5B; transition-delay: 0.8s"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <!-- Decorative circle -->
-                    <div class="absolute -top-8 -right-8 w-32 h-32 border-2 border-dashed border-sage/30 rounded-full spin-slow-reverse"></div>
-                    <div class="absolute -top-12 -right-12 w-40 h-40 border border-blood/10 rounded-full float-reverse"></div>
+                </div>
+            </div>
+
+            <!-- EXPANDED Key Concepts Grid (4 items) -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 reveal">
+                <!-- Card 1 -->
+                <div class="organic-card p-6 cursor-pointer hover:shadow-xl transition-all duration-500" data-cursor="hover">
+                    <div class="w-12 h-12 bg-sage/10 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-sage" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    </div>
+                    <h3 class="font-serif text-lg text-ink mb-2">Физиология</h3>
+                    <p class="font-sans text-xs text-ink/60 font-light">Тән саулығы, иммунитет, ұзақ өмір сүру негіздері.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="organic-card p-6 cursor-pointer hover:shadow-xl transition-all duration-500" data-cursor="hover">
+                    <div class="w-12 h-12 bg-blood/10 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-blood" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    </div>
+                    <h3 class="font-serif text-lg text-ink mb-2">Мәдениет</h3>
+                    <p class="font-sans text-xs text-ink/60 font-light">Тіл тазалығы, сөз этикеті, рухани байлық.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="organic-card p-6 cursor-pointer hover:shadow-xl transition-all duration-500" data-cursor="hover">
+                    <div class="w-12 h-12 bg-ink/10 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <h3 class="font-serif text-lg text-ink mb-2">Психология</h3>
+                    <p class="font-sans text-xs text-ink/60 font-light">Эмоционалды интеллект, стресс-менеджмент.</p>
+                </div>
+                <!-- Card 4 -->
+                <div class="organic-card p-6 cursor-pointer hover:shadow-xl transition-all duration-500" data-cursor="hover">
+                    <div class="w-12 h-12 bg-sage/20 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-sage" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <h3 class="font-serif text-lg text-ink mb-2">Экология</h3>
+                    <p class="font-sans text-xs text-ink/60 font-light">Лингвоэкология және қоршаған орта тазалығы.</p>
                 </div>
             </div>
         </div>
     </section>
     
-    <!-- ==================== STATISTICS SECTION ==================== -->
-    <section class="py-24 bg-ink text-paper relative overflow-hidden">
-        <!-- Animated background -->
-        <div class="absolute inset-0 opacity-10">
-            <div class="absolute top-0 left-1/4 w-96 h-96 bg-sage rounded-full blur-3xl float"></div>
-            <div class="absolute bottom-0 right-1/4 w-80 h-80 bg-blood rounded-full blur-3xl float-reverse"></div>
-        </div>
-        
-        <div class="max-w-7xl mx-auto px-6 md:px-24 relative z-10">
-            <div class="text-center mb-20">
-                <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold reveal">Статистика</span>
-                <h2 class="font-serif text-4xl md:text-6xl text-paper mt-4 reveal">
-                    Маңызды көрсеткіштер
-                </h2>
-            </div>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Stat 1 -->
-                <div class="text-center reveal stagger-item">
-                    <div class="counter-circle w-32 h-32 mx-auto mb-6 rounded-full border border-paper/20 flex items-center justify-center">
-                        <span class="font-serif text-5xl text-paper counter" data-target="78">0</span>
-                    </div>
-                    <h3 class="font-sans text-xs uppercase tracking-[0.3em] text-paper/60 font-semibold mb-2">Өмір сүру ұзақтығы</h3>
-                    <p class="font-sans text-sm text-paper/40 font-light">Қазақстанда (жыл)</p>
-                </div>
-                
-                <!-- Stat 2 -->
-                <div class="text-center reveal stagger-item">
-                    <div class="counter-circle w-32 h-32 mx-auto mb-6 rounded-full border border-paper/20 flex items-center justify-center">
-                        <span class="font-serif text-5xl text-blood counter" data-target="42" data-suffix="%">0</span>
-                    </div>
-                    <h3 class="font-sans text-xs uppercase tracking-[0.3em] text-paper/60 font-semibold mb-2">Спорт</h3>
-                    <p class="font-sans text-sm text-paper/40 font-light">Шұғылданушылар</p>
-                </div>
-                
-                <!-- Stat 3 -->
-                <div class="text-center reveal stagger-item">
-                    <div class="counter-circle w-32 h-32 mx-auto mb-6 rounded-full border border-paper/20 flex items-center justify-center">
-                        <span class="font-serif text-5xl text-sage counter" data-target="15" data-suffix="М">0</span>
-                    </div>
-                    <h3 class="font-sans text-xs uppercase tracking-[0.3em] text-paper/60 font-semibold mb-2">Қазақ тілі</h3>
-                    <p class="font-sans text-sm text-paper/40 font-light">Сөйлеушілер саны</p>
-                </div>
-                
-                <!-- Stat 4 -->
-                <div class="text-center reveal stagger-item">
-                    <div class="counter-circle w-32 h-32 mx-auto mb-6 rounded-full border border-paper/20 flex items-center justify-center">
-                        <span class="font-serif text-5xl text-paper">100%</span>
-                    </div>
-                    <h3 class="font-sans text-xs uppercase tracking-[0.3em] text-paper/60 font-semibold mb-2">Жауапкершілік</h3>
-                    <p class="font-sans text-sm text-paper/40 font-light">Әркімнің міндеті</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- ==================== HEALTH SECTION - PART 1 ==================== -->
-    <section id="health" class="py-32 md:py-40 relative overflow-hidden">
+    <!-- ==================== HEALTH SECTION ==================== -->
+    <section id="health" class="py-32 md:py-40 relative overflow-hidden bg-stone/20">
         <!-- Background decoration -->
         <div class="absolute top-1/4 right-0 w-[500px] h-[500px] bg-sage/5 blob-animated -z-10"></div>
         
         <div class="max-w-7xl mx-auto px-6 md:px-24">
-            <div class="grid lg:grid-cols-12 gap-12 items-start">
-                <!-- Sticky image column -->
-                <div class="lg:col-span-5 lg:sticky lg:top-32 reveal-left">
-                    <div class="relative">
-                        <div class="overflow-hidden rounded-2xl img-reveal">
-                            <img 
-                                src="https://image.pollinations.ai/prompt/person%20silhouette%20meditation%20yoga%20pose%20on%20mountain%20peak%20sunrise%20kazakh%20altai%20mountains%20mist%20fog%20golden%20hour%20double%20exposure%20nature%20leaves%20branches%20organic%20artistic%20cinematic%20lighting%208k%20highly%20detailed%20photorealistic?width=700&height=900&nologo=true&seed=456" 
-                                alt="Медитация"
-                                class="w-full h-auto img-zoom"
-                                loading="lazy"
-                            >
+            <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold reveal">І Бөлім</span>
+            <h2 class="font-serif text-5xl md:text-7xl text-ink mt-4 mb-12 leading-tight reveal">
+                Адам өмірін қорғау: <br><span class="text-blood italic">Тарих және Болашақ</span>
+            </h2>
+
+            <!-- NEW: Horizontal Scroll Timeline -->
+            <div class="mb-24 reveal">
+                <h3 class="font-serif text-2xl text-ink mb-8">Медицина мен Гигиена тарихы</h3>
+                <div class="timeline-container cursor-grab active:cursor-grabbing" id="timeline">
+                    <div class="timeline-track">
+                        <!-- Date 1 -->
+                        <div class="timeline-card organic-card p-6">
+                            <div class="text-blood font-serif text-4xl mb-2">980-1037</div>
+                            <div class="text-sage font-sans text-xs font-bold uppercase mb-4">Ибн Сина дәуірі</div>
+                            <p class="font-sans text-sm text-ink/70">«Медицина каноны» еңбегінің жазылуы. Гигиена мен диетаның аурудың алдын алудағы маңызын алғашқы болып ғылыми негіздеді.</p>
+                            <div class="timeline-line"></div>
                         </div>
-                        
-                        <!-- Blob decoration -->
-                        <div class="absolute -z-10 -bottom-12 -right-12 w-48 h-48 bg-sage/20 blob-animated"></div>
-                        <div class="absolute -z-10 -top-8 -left-8 w-32 h-32 bg-blood/10 blob-animated" style="animation-delay: -7s;"></div>
-                    </div>
-                </div>
-                
-                <!-- Content column -->
-                <div class="lg:col-span-7">
-                    <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold reveal">І Бөлім</span>
-                    <h2 class="font-serif text-5xl md:text-7xl text-ink mt-4 mb-8 leading-tight reveal">
-                        Адам өмірін қорғау — <span class="text-blood italic">басты міндет</span>
-                    </h2>
-                    
-                    <!-- Constitution quote -->
-                    <div class="bg-white p-8 md:p-10 rounded-2xl shadow-lg mb-12 reveal quote-large glow">
-                        <blockquote class="font-serif text-xl md:text-2xl text-ink italic leading-relaxed">
-                            Қазақстан Республикасының ең қымбат қазынасы – адам және адамның өмірі, құқықтары мен бостандықтары
-                        </blockquote>
-                        <cite class="font-sans text-xs text-ink/50 mt-6 block uppercase tracking-wider">— ҚР Конституциясы, 1-бап</cite>
-                    </div>
-                    
-                    <div class="font-sans text-lg text-ink/80 leading-relaxed font-light space-y-6 text-justify reveal">
-                        <p>
-                            Адам өмірі — ең қасиетті құндылық. Бұл тек философиялық тұжырым емес, бұл біздің мемлекетіміздің негізгі заңында бекітілген принцип. Әрбір адамның өмір сүруге деген табиғи құқығын қорғау — гуманизмнің негізі және қоғамдық прогрестің кепілі.
-                        </p>
-                        <p>
-                            Қауіпсіздік мәдениеті деген түсінік кең ауқымды қамтиды: еңбек орнындағы қауіпсіздік ережелерін сақтаудан бастап, жол қозғалысы ережелеріне дейін, төтенше жағдайларда дұрыс әрекет етуден бастап, күнделікті өмірдегі сақтық шараларына дейін.
-                        </p>
-                    </div>
-                    
-                    <!-- Three pillars -->
-                    <div class="grid md:grid-cols-3 gap-8 mt-16">
-                        <div class="reveal stagger-item">
-                            <div class="h-1 w-12 bg-blood mb-6"></div>
-                            <h3 class="font-serif text-xl text-ink mb-4">Қауіпсіздік мәдениеті</h3>
-                            <p class="font-sans text-sm text-ink/60 font-light leading-relaxed">
-                                Адам өмірін қорғау — бұл кешенді жүйе. Оған еңбек қауіпсіздігі, жол ережесін сақтау жатады.
-                            </p>
+                        <!-- Date 2 -->
+                        <div class="timeline-card organic-card p-6">
+                            <div class="text-blood font-serif text-4xl mb-2">XV-XVIII ғ.</div>
+                            <div class="text-sage font-sans text-xs font-bold uppercase mb-4">Қазақ халық емі</div>
+                            <p class="font-sans text-sm text-ink/70">Дала медицинасының дамуы. Шөп дәрілермен емдеу, сынықшылық өнері және тазалық сақтаудың дәстүрлі әдістері қалыптасты.</p>
+                            <div class="timeline-line"></div>
                         </div>
-                        
-                        <div class="reveal stagger-item">
-                            <div class="h-1 w-12 bg-sage mb-6"></div>
-                            <h3 class="font-serif text-xl text-ink mb-4">Өмір сүру құқығы</h3>
-                            <p class="font-sans text-sm text-ink/60 font-light leading-relaxed">
-                                Адамның өмір сүруге деген табиғи құқығы — бұл туғаннан берілетін құқық.
-                            </p>
+                        <!-- Date 3 -->
+                        <div class="timeline-card organic-card p-6">
+                            <div class="text-blood font-serif text-4xl mb-2">1920-1930</div>
+                            <div class="text-sage font-sans text-xs font-bold uppercase mb-4">Санитарлық ағарту</div>
+                            <p class="font-sans text-sm text-ink/70">Жаппай вакцинация және эпидемиямен күрес. Халықты гигиеналық сауаттылыққа үйрету жүйесі құрылды.</p>
+                            <div class="timeline-line"></div>
                         </div>
-                        
-                        <div class="reveal stagger-item">
-                            <div class="h-1 w-12 bg-ink mb-6"></div>
-                            <h3 class="font-serif text-xl text-ink mb-4">Жеке жауапкершілік</h3>
-                            <p class="font-sans text-sm text-ink/60 font-light leading-relaxed">
-                                Әрбір адамның өз денсаулығына деген жауапты қатынасы маңызды.
-                            </p>
+                        <!-- Date 4 -->
+                        <div class="timeline-card organic-card p-6">
+                            <div class="text-blood font-serif text-4xl mb-2">1978</div>
+                            <div class="text-sage font-sans text-xs font-bold uppercase mb-4">Алматы декларациясы</div>
+                            <p class="font-sans text-sm text-ink/70">Бүкіләлемдік денсаулық сақтау ұйымының тарихи конференциясы. «Денсаулық баршаға» ұраны қабылданды.</p>
+                            <div class="timeline-line"></div>
+                        </div>
+                        <!-- Date 5 -->
+                        <div class="timeline-card organic-card p-6">
+                            <div class="text-blood font-serif text-4xl mb-2">1991-2024</div>
+                            <div class="text-sage font-sans text-xs font-bold uppercase mb-4">Тәуелсіздік дәуірі</div>
+                            <p class="font-sans text-sm text-ink/70">Ұлттық медицина кластерлерінің құрылуы. Кардиохирургия мен нейрохирургияның дамуы. Телемедицина.</p>
+                            <div class="timeline-line"></div>
+                        </div>
+                        <!-- Date 6 -->
+                        <div class="timeline-card organic-card p-6 bg-ink text-paper">
+                            <div class="text-sage font-serif text-4xl mb-2">2030+</div>
+                            <div class="text-white font-sans text-xs font-bold uppercase mb-4">Болашақ</div>
+                            <p class="font-sans text-sm text-paper/70">Геномдық медицина, жасанды интеллект диагностикасы және биохакинг. Жекелендірілген терапия.</p>
+                            <div class="timeline-line"></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    
-    <!-- ==================== HEALTH SECTION - PART 2 ==================== -->
-    <section class="py-32 bg-stone/50 relative overflow-hidden">
-        <!-- Background blobs -->
-        <div class="absolute top-0 left-0 w-[400px] h-[400px] bg-sage/10 blob-animated -z-10" style="animation-delay: -3s;"></div>
-        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blood/5 blob-animated -z-10"></div>
-        
-        <div class="max-w-7xl mx-auto px-6 md:px-24">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <!-- Content -->
-                <div class="order-2 lg:order-1 reveal-left">
-                    <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold">Қоғам байлығы</span>
-                    <h2 class="font-serif text-4xl md:text-6xl text-ink mt-4 mb-6 leading-tight">
-                        Денсаулық — <span class="text-blood italic">бірінші байлық</span>
-                    </h2>
-                    
-                    <p class="font-sans text-lg text-ink/70 mb-10 leading-relaxed font-light text-justify">
-                        Халық даналығында «Бірінші байлық – денсаулық» деп бекер айтылмаған. Дені сау ұлт – мемлекеттің басты капиталы, экономикалық өсудің негізі және ұлттық қауіпсіздіктің кепілі.
+
+            <!-- ANATOMY / STRUCTURE GRID (Integrated 3-Column) -->
+            <div class="grid lg:grid-cols-12 gap-8 mb-24 items-center">
+                <!-- Left: Mathematical Formulas & Data -->
+                <div class="lg:col-span-3 space-y-6 reveal-left">
+                    <div class="organic-card p-6 bg-white/50">
+                        <h4 class="font-serif text-blood text-xl mb-2">BMI Formula</h4>
+                        <p class="font-mono text-xs text-ink/60 mb-2">Body Mass Index</p>
+                        <div class="font-mono text-lg bg-stone/30 p-2 rounded text-center">BMI = kg / m²</div>
+                    </div>
+                    <div class="organic-card p-6 bg-white/50">
+                        <h4 class="font-serif text-sage text-xl mb-2">Жүрек соғысы</h4>
+                        <p class="font-mono text-xs text-ink/60 mb-2">Қалыпты норма</p>
+                        <div class="font-mono text-4xl text-ink text-center">60-80 <span class="text-xs">айн/мин</span></div>
+                    </div>
+                    <div class="organic-card p-6 bg-white/50">
+                        <h4 class="font-serif text-ink text-xl mb-2">Су балансы</h4>
+                        <p class="font-mono text-xs text-ink/60 mb-2">Тәуліктік қажеттілік</p>
+                        <div class="font-mono text-lg bg-stone/30 p-2 rounded text-center">30ml × салмақ (kg)</div>
+                    </div>
+                </div>
+
+                <!-- Center: Visual Canvas/Image -->
+                <div class="lg:col-span-6 relative reveal">
+                    <div class="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/5]">
+                        <img
+                            src="https://image.pollinations.ai/prompt/human%20anatomy%20vitruvian%20man%20style%20medical%20schematic%20overlay%20glowing%20lines%20golden%20ratio%20geometry%20health%20concept%20dark%20background%208k%20detailed?width=800&height=1000&nologo=true"
+                            alt="Адам анатомиясы"
+                            class="w-full h-full object-cover"
+                        >
+                        <!-- Overlay Pulse Points -->
+                        <div class="absolute top-[20%] left-[50%] w-4 h-4 bg-blood rounded-full pulse shadow-[0_0_20px_#D65A31]"></div>
+                        <div class="absolute top-[40%] left-[45%] w-3 h-3 bg-sage rounded-full pulse shadow-[0_0_20px_#8A9A5B]" style="animation-delay: 1s"></div>
+                    </div>
+                </div>
+
+                <!-- Right: Contextual Explanations -->
+                <div class="lg:col-span-3 space-y-6 reveal-right">
+                    <div class="organic-card p-6 border-l-4 border-blood">
+                        <h4 class="font-serif text-lg text-ink mb-2">Гомеостаз</h4>
+                        <p class="font-sans text-xs text-ink/70 leading-relaxed">Организмнің ішкі ортасының тұрақтылығын сақтау қабілеті. Денсаулықтың негізгі көрсеткіші.</p>
+                    </div>
+                    <div class="organic-card p-6 border-l-4 border-sage">
+                        <h4 class="font-serif text-lg text-ink mb-2">Иммунитет</h4>
+                        <p class="font-sans text-xs text-ink/70 leading-relaxed">Ағзаның жұқпалы аурулар мен бөгде денелерге қарсы тұру қабілеті.</p>
+                    </div>
+                    <div class="organic-card p-6 border-l-4 border-ink">
+                        <h4 class="font-serif text-lg text-ink mb-2">Метаболизм</h4>
+                        <p class="font-sans text-xs text-ink/70 leading-relaxed">Зат алмасу процесі – тіршілікті қамтамасыз ететін химиялық реакциялар жиынтығы.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXPANDED Content & Accordions -->
+            <div class="grid lg:grid-cols-2 gap-16 items-start">
+                <div class="order-2 lg:order-1 reveal-left space-y-6">
+                    <h3 class="font-serif text-3xl text-ink">Денсаулық құндылығы</h3>
+                    <p class="font-sans text-lg text-ink/70 leading-relaxed font-light text-justify">
+                        Халық даналығында «Бірінші байлық – денсаулық» деп бекер айтылмаған. Дені сау ұлт – мемлекеттің басты капиталы, экономикалық өсудің негізі және ұлттық қауіпсіздіктің кепілі. Дүниежүзілік денсаулық сақтау ұйымының анықтамасы бойынша, денсаулық – бұл тек аурудың болмауы ғана емес, толыққанды физикалық, психикалық және әлеуметтік амандық.
                     </p>
                     
-                    <!-- Accordion - FIXED -->
-                    <div class="space-y-4" id="accordion-container">
-                        <div class="accordion-item organic-card overflow-hidden" data-accordion="1">
-                            <button class="accordion-header w-full p-6 flex justify-between items-center text-left cursor-pointer transition-colors duration-300" data-cursor="hover">
+                    <!-- Accordions with Expanded Content -->
+                    <div class="space-y-4" id="accordion-container-health">
+                        <!-- Item 1 -->
+                        <div class="accordion-item organic-card overflow-hidden" data-accordion="h1">
+                            <button class="accordion-header w-full p-6 flex justify-between items-center text-left cursor-pointer transition-colors duration-300 hover:bg-stone/20">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 bg-sage/10 rounded-full flex items-center justify-center">
-                                        <svg class="w-6 h-6 text-sage" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                        </svg>
+                                    <div class="w-10 h-10 bg-sage/10 rounded-full flex items-center justify-center">
+                                        <span class="font-serif text-sage font-bold">01</span>
                                     </div>
-                                    <span class="font-serif text-lg text-ink">Экономикалық фактор</span>
+                                    <span class="font-serif text-lg text-ink">Экономикалық фактор (Толық талдау)</span>
                                 </div>
-                                <span class="accordion-icon text-blood text-2xl font-light select-none">+</span>
+                                <span class="accordion-icon text-blood text-xl">+</span>
                             </button>
                             <div class="accordion-content">
-                                <div class="px-6 pb-6">
-                                    <p class="font-sans text-ink/60 leading-relaxed font-light text-justify">
-                                        Дені сау адам еңбекке қабілетті, ол ел экономикасына үлес қосады. Ауру-сырқаудың көбеюі мемлекетке экономикалық шығын әкеледі: медициналық шығындар, еңбек өнімділігінің төмендеуі, әлеуметтік төлемдер. Сондықтан халық денсаулығына инвестиция салу — ең тиімді экономикалық стратегия.
-                                    </p>
+                                <div class="px-6 pb-6 pt-2 font-sans text-ink/70 leading-relaxed font-light text-justify space-y-4">
+                                    <p>Дені сау адам – кез келген мемлекеттің ең құнды экономикалық ресурсы. Зерттеулер көрсеткендей, халықтың денсаулығы жақсы елдерде ЖІӨ (Жалпы Ішкі Өнім) өсімі жоғары болады.</p>
+                                    <p>Ауру-сырқау мемлекетке орасан зор шығын әкеледі: еңбекке жарамсыздық парақтарын төлеу, қымбат медициналық ем-дом, дәрі-дәрмек шығындары, және ең маңыздысы – білікті мамандардың жұмыстан қол үзуі.</p>
+                                    <p>Инвестициялық тұрғыдан алғанда, профилактикалық медицинаға салынған 1 теңге болашақта емдеуге жұмсалатын 7 теңгені үнемдейді. Сондықтан, салауатты өмір салтын насихаттау – бұл тек әлеуметтік емес, стратегиялық экономикалық міндет.</p>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="accordion-item organic-card overflow-hidden" data-accordion="2">
-                            <button class="accordion-header w-full p-6 flex justify-between items-center text-left cursor-pointer transition-colors duration-300" data-cursor="hover">
+                        <!-- Item 2 -->
+                        <div class="accordion-item organic-card overflow-hidden" data-accordion="h2">
+                            <button class="accordion-header w-full p-6 flex justify-between items-center text-left cursor-pointer transition-colors duration-300 hover:bg-stone/20">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 bg-blood/10 rounded-full flex items-center justify-center">
-                                        <svg class="w-6 h-6 text-blood" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                                        </svg>
+                                    <div class="w-10 h-10 bg-blood/10 rounded-full flex items-center justify-center">
+                                        <span class="font-serif text-blood font-bold">02</span>
                                     </div>
-                                    <span class="font-serif text-lg text-ink">Салауатты өмір салты</span>
+                                    <span class="font-serif text-lg text-ink">Салауатты өмір салты философиясы</span>
                                 </div>
-                                <span class="accordion-icon text-blood text-2xl font-light select-none">+</span>
+                                <span class="accordion-icon text-blood text-xl">+</span>
                             </button>
                             <div class="accordion-content">
-                                <div class="px-6 pb-6">
-                                    <p class="font-sans text-ink/60 leading-relaxed font-light text-justify">
-                                        Салауатты өмір салты (СӨС) — бұл өмір сүру философиясы. Ол дұрыс тамақтануды, спортпен жүйелі шұғылдануды, зиянды әдеттерден (темекі, ішімдік, есірткі) аулақ болуды қамтиды. Бұл жай ғана ережелер жиынтығы емес, бұл саналы таңдау.
-                                    </p>
+                                <div class="px-6 pb-6 pt-2 font-sans text-ink/70 leading-relaxed font-light text-justify space-y-4">
+                                    <p>Салауатты өмір салты (СӨС) — бұл уақытша диета немесе спортзалға бару емес, бұл өмір сүру философиясы және күнделікті саналы таңдау.</p>
+                                    <ul class="list-disc pl-5 space-y-2">
+                                        <li><strong>Тамақтану мәдениеті:</strong> "Ас – адамның арқауы". Табиғи, өңделмеген өнімдерді тұтыну.</li>
+                                        <li><strong>Белсенді қозғалыс:</strong> Гиподинамия – 21 ғасырдың дерті. Күніне кемінде 10,000 қадам жүру.</li>
+                                        <li><strong>Ұйқы гигиенасы:</strong> Толыққанды ұйқы (7-8 сағат) ағзаның қалпына келуі үшін өте маңызды.</li>
+                                        <li><strong>Зиянды әдеттерден бас тарту:</strong> Темекі, алкоголь және есірткі заттарынан толық арылу.</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="accordion-item organic-card overflow-hidden" data-accordion="3">
-                            <button class="accordion-header w-full p-6 flex justify-between items-center text-left cursor-pointer transition-colors duration-300" data-cursor="hover">
+
+                        <!-- Item 3 -->
+                         <div class="accordion-item organic-card overflow-hidden" data-accordion="h3">
+                            <button class="accordion-header w-full p-6 flex justify-between items-center text-left cursor-pointer transition-colors duration-300 hover:bg-stone/20">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 bg-ink/10 rounded-full flex items-center justify-center">
-                                        <svg class="w-6 h-6 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-                                        </svg>
+                                    <div class="w-10 h-10 bg-ink/10 rounded-full flex items-center justify-center">
+                                        <span class="font-serif text-ink font-bold">03</span>
                                     </div>
-                                    <span class="font-serif text-lg text-ink">Психологиялық саулық</span>
+                                    <span class="font-serif text-lg text-ink">Ментальды саулық</span>
                                 </div>
-                                <span class="accordion-icon text-blood text-2xl font-light select-none">+</span>
+                                <span class="accordion-icon text-blood text-xl">+</span>
                             </button>
                             <div class="accordion-content">
-                                <div class="px-6 pb-6">
-                                    <p class="font-sans text-ink/60 leading-relaxed font-light text-justify">
-                                        Қазіргі заманда күйзеліс пен стресске қарсы тұру қабілеті физикалық денсаулықпен тең дәрежеде маңызды. Ментальды саулық — бұл эмоциялық тұрақтылық, өмірлік қиындықтарға төзімділік, қоршаған адамдармен жақсы қарым-қатынас орната білу.
-                                    </p>
+                                <div class="px-6 pb-6 pt-2 font-sans text-ink/70 leading-relaxed font-light text-justify space-y-4">
+                                    <p>Қазіргі урбанизацияланған әлемде ментальды (психикалық) денсаулық физикалық денсаулықтан кем түспейді. Стресс, депрессия және күйзеліс – иммунитеттің басты жаулары.</p>
+                                    <p>Психологиялық тұрақтылықты қалыптастыру жолдары:</p>
+                                    <ul class="list-disc pl-5 space-y-2">
+                                        <li>Эмоционалды интеллектті дамыту.</li>
+                                        <li>Медитация және тыныс алу жаттығулары.</li>
+                                        <li>Әлеуметтік байланыстарды (отбасы, достар) нығайту.</li>
+                                        <li>Цифрлық детокс – гаджеттерден демалу.</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Image -->
                 <div class="order-1 lg:order-2 reveal-right">
-                    <div class="relative">
-                        <div class="overflow-hidden rounded-2xl img-reveal">
-                            <img 
-                                src="https://image.pollinations.ai/prompt/kazakh%20eagle%20hunter%20berkutchi%20horseback%20silhouette%20golden%20eagle%20wings%20spread%20majestic%20steppe%20mountains%20background%20dramatic%20sky%20golden%20hour%20double%20exposure%20nature%20artistic%20cinematic%20lighting%208k%20highly%20detailed%20photorealistic?width=800&height=1000&nologo=true&seed=789" 
-                                alt="Қазақ бүркітші"
-                                class="w-full h-auto img-zoom"
-                                loading="lazy"
-                            >
+                    <div class="relative sticky top-32">
+                        <img
+                            src="https://image.pollinations.ai/prompt/kazakh%20eagle%20hunter%20berkutchi%20horseback%20silhouette%20golden%20eagle%20wings%20spread%20majestic%20steppe%20mountains%20background%20dramatic%20sky%20golden%20hour%20double%20exposure%20nature%20artistic%20cinematic%20lighting%208k%20highly%20detailed%20photorealistic?width=800&height=1000&nologo=true&seed=789"
+                            alt="Қазақ бүркітші"
+                            class="w-full h-auto rounded-2xl shadow-xl img-zoom"
+                            loading="lazy"
+                        >
+                        <!-- Quote overlay -->
+                        <div class="absolute -bottom-10 -left-10 bg-paper p-6 rounded-tr-3xl shadow-lg max-w-xs border-l-4 border-blood">
+                            <p class="font-serif text-ink italic">«Денсаулық — терең бақыт»</p>
                         </div>
-                        
-                        <!-- Decorative elements -->
-                        <div class="absolute -top-6 -left-6 w-24 h-24 border-2 border-blood/20 rounded-full float"></div>
-                        <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-sage/10 rounded-2xl -z-10"></div>
-                        <div class="absolute top-1/2 -right-12 w-20 h-20 border border-dashed border-sage/30 rounded-full spin-slow"></div>
                     </div>
                 </div>
             </div>
@@ -1027,20 +1093,63 @@
                 </p>
             </div>
             
-            <!-- Definition card -->
-            <div class="max-w-4xl mx-auto mb-24 reveal">
+            <!-- EXPANDED Definition card -->
+            <div class="grid lg:grid-cols-2 gap-12 mb-24 reveal">
                 <div class="bg-white p-10 md:p-14 rounded-3xl shadow-xl border-l-4 border-blood glow">
                     <h3 class="font-serif text-3xl text-ink mb-6">Сөз тазалығы деген не?</h3>
-                    <p class="font-sans text-lg text-ink/70 leading-relaxed font-light text-justify">
-                        Сөз тазалығы – сөйлеушінің ана тілінің нормаларын сақтай отырып, бөтен сөздерді, жаргондарды және дөрекі сөздерді араластырмай сөйлеуі. Бұл тек грамматикалық дұрыстық емес, бұл ойлау мәдениетінің көрінісі, адамның рухани әлемінің айнасы. Таза сөйлеу — бұл ана тіліне деген құрмет.
+                    <p class="font-sans text-lg text-ink/70 leading-relaxed font-light text-justify mb-4">
+                        Сөз тазалығы – сөйлеушінің ана тілінің нормаларын сақтай отырып, бөтен сөздерді, жаргондарды және дөрекі сөздерді араластырмай сөйлеуі. Бұл тек грамматикалық дұрыстық емес, бұл ойлау мәдениетінің көрінісі, адамның рухани әлемінің айнасы. Таза сөйлеу — бұл ана тіліне деген құрмет және ұлттық кодты сақтау құралы.
                     </p>
+                    <p class="font-sans text-lg text-ink/70 leading-relaxed font-light text-justify">
+                        Тіл тазалығының негізгі талаптары:
+                        <br>1. Сөздерді өз мағынасында қолдану.
+                        <br>2. Дыбысталу заңдылықтарын сақтау.
+                        <br>3. Стильдік үйлесімділікті бұзбау.
+                    </p>
+                </div>
+
+                <!-- NEW: Language Data Viz -->
+                <div class="space-y-6">
+                    <div class="organic-card p-8">
+                        <h4 class="font-serif text-xl text-ink mb-6">Тіл тазалығының индексі</h4>
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between mb-2 font-sans text-sm">
+                                    <span>Әдеби норма</span>
+                                    <span class="text-sage font-bold">65%</span>
+                                </div>
+                                <div class="w-full bg-stone/50 h-2 rounded-full overflow-hidden">
+                                    <div class="h-full bg-sage w-[65%]"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2 font-sans text-sm">
+                                    <span>Варваризмдер (аралас тіл)</span>
+                                    <span class="text-blood font-bold">25%</span>
+                                </div>
+                                <div class="w-full bg-stone/50 h-2 rounded-full overflow-hidden">
+                                    <div class="h-full bg-blood w-[25%]"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2 font-sans text-sm">
+                                    <span>Жаргондар</span>
+                                    <span class="text-ink font-bold">10%</span>
+                                </div>
+                                <div class="w-full bg-stone/50 h-2 rounded-full overflow-hidden">
+                                    <div class="h-full bg-ink w-[10%]"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-6 text-xs text-ink/50 italic text-center">*Шартты әлеуметтік зерттеу деректері негізінде</p>
+                    </div>
                 </div>
             </div>
             
             <!-- Harmful factors - tabs -->
             <div class="mb-24">
                 <h3 class="font-serif text-3xl text-ink text-center mb-12 reveal">
-                    Сөз тазалығына <span class="text-blood italic">нұқсан</span> келтіретін факторлар
+                    Тіл экологиясына <span class="text-blood italic">қауіптер</span>
                 </h3>
                 
                 <div class="flex flex-wrap justify-center gap-6 mb-12 reveal">
@@ -1049,25 +1158,24 @@
                     <button class="tab-btn font-sans text-sm uppercase tracking-[0.2em] text-ink/60 font-semibold pb-2 cursor-pointer magnetic" data-tab="dialect" data-cursor="hover">Диалектизмдер</button>
                 </div>
                 
-                <div class="max-w-3xl mx-auto">
+                <div class="max-w-4xl mx-auto">
                     <!-- Tab 1 -->
                     <div class="tab-content" id="tab-varvarism">
-                        <div class="organic-card p-10 reveal">
-                            <div class="flex flex-col md:flex-row items-start gap-6">
-                                <div class="w-20 h-20 bg-blood/10 rounded-2xl flex items-center justify-center flex-shrink-0 pulse">
-                                    <span class="font-serif text-4xl text-blood italic">В</span>
+                        <div class="organic-card p-10 reveal border-t-4 border-blood">
+                            <h4 class="font-serif text-2xl text-ink mb-4">Варваризмдер (Шұбар тіл)</h4>
+                            <p class="font-sans text-ink/70 leading-relaxed font-light text-justify mb-6">
+                                Варваризм — (грек. barbaros – жат жерлік) — тілге енген, бірақ әлі толық сіңіспеген немесе тілдік нормаға қайшы келетін шет сөздер. Қазақ тілінде баламасы бар сөздердің орнына шет тілі сөздерін (әсіресе орыс және ағылшын) қолдану — бұл тілдің иммунитетін әлсіретеді.
+                            </p>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="p-4 bg-stone/30 rounded-xl">
+                                    <p class="text-blood font-bold text-sm mb-1">Теріс қолданыс:</p>
+                                    <p class="italic">"Маған вообще бәрібір"</p>
+                                    <p class="italic">"Уже кеш болып кетті"</p>
                                 </div>
-                                <div>
-                                    <h4 class="font-serif text-2xl text-ink mb-4">Варваризмдер</h4>
-                                    <p class="font-sans text-ink/70 leading-relaxed font-light text-justify mb-6">
-                                        Орынсыз қолданылған шет тіліндегі сөздер — бұл тілдің тазалығына ең көп зиян келтіретін фактор. Қазақ тілінде баламасы бар сөздердің орнына шет тілі сөздерін қолдану — бұл тіл құнсыздануының белгісі.
-                                    </p>
-                                    <div class="p-4 bg-stone/50 rounded-xl">
-                                        <p class="font-sans text-sm text-blood font-semibold mb-2">Мысалдар:</p>
-                                        <p class="font-sans text-ink/60">"общий" → <span class="text-sage font-semibold">ортақ</span></p>
-                                        <p class="font-sans text-ink/60">"уже" → <span class="text-sage font-semibold">әлдеқашан</span></p>
-                                        <p class="font-sans text-ink/60">"давай" → <span class="text-sage font-semibold">жүр, кел</span></p>
-                                    </div>
+                                <div class="p-4 bg-sage/10 rounded-xl">
+                                    <p class="text-sage font-bold text-sm mb-1">Дұрыс қолданыс:</p>
+                                    <p>Маған мүлде бәрібір</p>
+                                    <p>Әлдеқашан кеш болып кетті</p>
                                 </div>
                             </div>
                         </div>
@@ -1075,127 +1183,104 @@
                     
                     <!-- Tab 2 -->
                     <div class="tab-content hidden" id="tab-parasite">
-                        <div class="organic-card p-10">
-                            <div class="flex flex-col md:flex-row items-start gap-6">
-                                <div class="w-20 h-20 bg-blood/10 rounded-2xl flex items-center justify-center flex-shrink-0 pulse">
-                                    <span class="font-serif text-4xl text-blood italic">П</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-serif text-2xl text-ink mb-4">Паразит сөздер</h4>
-                                    <p class="font-sans text-ink/70 leading-relaxed font-light text-justify mb-6">
-                                        Ойды байланыстыру үшін емес, әдет бойынша айтылатын мағынасыз сөздер. Бұл сөздер сөйлемге ешқандай мағына қоспайды, керісінше, сөйлеуді бұзады.
-                                    </p>
-                                    <div class="p-4 bg-stone/50 rounded-xl">
-                                        <p class="font-sans text-sm text-blood font-semibold mb-2">Мысалдар:</p>
-                                        <p class="font-sans text-ink/60">"жаңағы", "алгі", "не ғой", "типа", "как бы"</p>
-                                        <p class="font-sans text-ink/40 text-sm mt-2">Бұл сөздерді қолданудан аулақ болу керек.</p>
-                                    </div>
-                                </div>
+                        <div class="organic-card p-10 border-t-4 border-ink">
+                            <h4 class="font-serif text-2xl text-ink mb-4">Паразит (қыстырма) сөздер</h4>
+                            <p class="font-sans text-ink/70 leading-relaxed font-light text-justify mb-6">
+                                Ойды байланыстыру үшін емес, әдет бойынша, кейде ойдың жоқтығын жасыру үшін айтылатын мағынасыз сөздер. Олар сөйлеу ырғағын бұзып, тыңдаушыны жалықтырады.
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-stone/50 rounded-full text-sm text-ink/60 line-through">Жаңағы</span>
+                                <span class="px-3 py-1 bg-stone/50 rounded-full text-sm text-ink/60 line-through">Алгі</span>
+                                <span class="px-3 py-1 bg-stone/50 rounded-full text-sm text-ink/60 line-through">Не ғой</span>
+                                <span class="px-3 py-1 bg-stone/50 rounded-full text-sm text-ink/60 line-through">Типа</span>
+                                <span class="px-3 py-1 bg-stone/50 rounded-full text-sm text-ink/60 line-through">Как бы</span>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Tab 3 -->
                     <div class="tab-content hidden" id="tab-dialect">
-                        <div class="organic-card p-10">
-                            <div class="flex flex-col md:flex-row items-start gap-6">
-                                <div class="w-20 h-20 bg-blood/10 rounded-2xl flex items-center justify-center flex-shrink-0 pulse">
-                                    <span class="font-serif text-4xl text-blood italic">Д</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-serif text-2xl text-ink mb-4">Диалектизмдер мен жаргондар</h4>
-                                    <p class="font-sans text-ink/70 leading-relaxed font-light text-justify mb-6">
-                                        Әдеби тіл нормасына жатпайтын жергілікті немесе белгілі бір топқа тән сөздер. Диалектизмдер — тілдің байлығы, бірақ ресми қарым-қатынаста қолдану орынсыз.
-                                    </p>
-                                    <div class="p-4 bg-stone/50 rounded-xl">
-                                        <p class="font-sans text-sm text-sage font-semibold mb-2">Ескерту:</p>
-                                        <p class="font-sans text-ink/60">Диалектілер — тілдің байлығы, бірақ әдеби тілде сақтық керек.</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="organic-card p-10 border-t-4 border-sage">
+                            <h4 class="font-serif text-2xl text-ink mb-4">Диалектизмдер</h4>
+                            <p class="font-sans text-ink/70 leading-relaxed font-light text-justify mb-6">
+                                Белгілі бір аймақта ғана қолданылатын жергілікті сөздер. Көркем әдебиетте кейіпкер тілін сомдау үшін қажет болғанымен, ресми және ғылыми стильде, әдеби тілде оларды қолданудан аулақ болған жөн.
+                            </p>
+                            <p class="text-sm italic text-ink/50">Мысалы: "нән" (үлкен), "әтеш" (қораз), "шапқы" (кетпен).</p>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Language norms -->
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div class="reveal-left">
-                    <h3 class="font-serif text-4xl text-ink mb-8">
-                        Тілдік жүйе және <span class="text-sage italic">норма</span>
-                    </h3>
-                    <p class="font-sans text-lg text-ink/70 leading-relaxed font-light text-justify mb-10">
-                        Тіл – тірі ағза, ол үнемі дамып, өзгеріп отырады. Бірақ оның өзіндік заңдылықтары — нормалары бар. Бұл нормаларды сақтау — тіл байлығын сақтаудың және келесі ұрпаққа жеткізудің негізгі шарты.
-                    </p>
-                    
-                    <div class="space-y-6">
-                        <div class="flex items-start gap-4 group cursor-pointer p-4 rounded-xl transition-all duration-300 hover:bg-white hover:shadow-lg" data-cursor="hover">
-                            <div class="w-4 h-4 bg-blood rounded-full mt-1.5 flex-shrink-0 group-hover:scale-150 transition-transform"></div>
-                            <div>
-                                <h4 class="font-serif text-xl text-ink mb-1 group-hover:text-blood transition-colors">Лексикалық норма</h4>
-                                <p class="font-sans text-ink/60 font-light">Сөздерді мағынасына сай дұрыс қолдану. Әр сөздің өз орны бар.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start gap-4 group cursor-pointer p-4 rounded-xl transition-all duration-300 hover:bg-white hover:shadow-lg" data-cursor="hover">
-                            <div class="w-4 h-4 bg-sage rounded-full mt-1.5 flex-shrink-0 group-hover:scale-150 transition-transform"></div>
-                            <div>
-                                <h4 class="font-serif text-xl text-ink mb-1 group-hover:text-sage transition-colors">Грамматикалық норма</h4>
-                                <p class="font-sans text-ink/60 font-light">Сөйлем құрылымының дұрыстығы. Сөз тіркестері мен сөйлемдердің дұрыс жасалуы.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start gap-4 group cursor-pointer p-4 rounded-xl transition-all duration-300 hover:bg-white hover:shadow-lg" data-cursor="hover">
-                            <div class="w-4 h-4 bg-ink rounded-full mt-1.5 flex-shrink-0 group-hover:scale-150 transition-transform"></div>
-                            <div>
-                                <h4 class="font-serif text-xl text-ink mb-1">Орфоэпиялық норма</h4>
-                                <p class="font-sans text-ink/60 font-light">Сөздердің дұрыс дыбысталуы мен айтылуы. Дұрыс екпін қою.</p>
-                            </div>
-                        </div>
+            <!-- NEW: GLOSSARY OF TERMS (12 items) -->
+            <div class="mb-24 reveal">
+                <h3 class="font-serif text-3xl text-ink mb-10 text-center">Терминдер сөздігі</h3>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- Term 1 -->
+                    <div class="organic-card p-4 hover:bg-stone/20 transition-colors">
+                        <h5 class="font-serif text-blood text-lg mb-1">Лингвоэкология</h5>
+                        <p class="text-xs text-ink/60">Тілдік ортаның тазалығын зерттейтін ғылым саласы.</p>
                     </div>
-                </div>
-                
-                <!-- Right vs Wrong comparison -->
-                <div class="reveal-right">
-                    <div class="organic-card p-10">
-                        <h4 class="font-serif text-2xl text-ink mb-8 text-center">Дұрыс пен Бұрыс</h4>
-                        
-                        <div class="space-y-4">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="p-4 bg-blood/5 border border-blood/20 rounded-xl transition-all duration-300 hover:bg-blood/10 hover:scale-105">
-                                    <span class="font-sans text-xs text-blood uppercase tracking-wider font-semibold">✗ Бұрыс</span>
-                                    <p class="font-sans text-ink/80 mt-2 text-sm">"Денсаулығым вообще құрып кетті"</p>
-                                </div>
-                                <div class="p-4 bg-sage/10 border border-sage/30 rounded-xl transition-all duration-300 hover:bg-sage/20 hover:scale-105">
-                                    <span class="font-sans text-xs text-sage uppercase tracking-wider font-semibold">✓ Дұрыс</span>
-                                    <p class="font-sans text-ink/80 mt-2 text-sm">"Денсаулығым мүлде нашарлап кетті"</p>
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="p-4 bg-blood/5 border border-blood/20 rounded-xl transition-all duration-300 hover:bg-blood/10 hover:scale-105">
-                                    <span class="font-sans text-xs text-blood uppercase tracking-wider font-semibold">✗ Бұрыс</span>
-                                    <p class="font-sans text-ink/80 mt-2 text-sm">"Это самый лучший вариант"</p>
-                                </div>
-                                <div class="p-4 bg-sage/10 border border-sage/30 rounded-xl transition-all duration-300 hover:bg-sage/20 hover:scale-105">
-                                    <span class="font-sans text-xs text-sage uppercase tracking-wider font-semibold">✓ Дұрыс</span>
-                                    <p class="font-sans text-ink/80 mt-2 text-sm">"Бұл ең жақсы нұсқа"</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-8 p-5 bg-stone/50 rounded-xl border-l-4 border-sage">
-                            <p class="font-sans text-ink/70 text-sm font-light italic">
-                                💡 Ғалымдар жағымды сөздер (алғыс, мақтау) айту адамның иммунитетін көтеретінін, ал былапыт сөздер стресс гормондарын шығаратынын дәлелдеген.
-                            </p>
-                        </div>
+                    <!-- Term 2 -->
+                    <div class="organic-card p-4 hover:bg-stone/20 transition-colors">
+                        <h5 class="font-serif text-blood text-lg mb-1">Пуризм</h5>
+                        <p class="text-xs text-ink/60">Тілді бөтен сөздерден тазартуға ұмтылушылық.</p>
+                    </div>
+                    <!-- Term 3 -->
+                    <div class="organic-card p-4 hover:bg-stone/20 transition-colors">
+                        <h5 class="font-serif text-blood text-lg mb-1">Узус</h5>
+                        <p class="text-xs text-ink/60">Тілдік бірліктердің қоғамда қалыптасқан қолданылу дағдысы.</p>
+                    </div>
+                    <!-- Term 4 -->
+                    <div class="organic-card p-4 hover:bg-stone/20 transition-colors">
+                        <h5 class="font-serif text-blood text-lg mb-1">Кодификация</h5>
+                        <p class="text-xs text-ink/60">Тілдік нормаларды сөздіктер мен ережелерде бекіту.</p>
+                    </div>
+                    <!-- Term 5 -->
+                    <div class="organic-card p-4 hover:bg-stone/20 transition-colors">
+                        <h5 class="font-serif text-sage text-lg mb-1">Сөйлеу этикеті</h5>
+                        <p class="text-xs text-ink/60">Қарым-қатынас кезіндегі әдептілік ережелерінің жүйесі.</p>
+                    </div>
+                    <!-- Term 6 -->
+                    <div class="organic-card p-4 hover:bg-stone/20 transition-colors">
+                        <h5 class="font-serif text-sage text-lg mb-1">Коннотация</h5>
+                        <p class="text-xs text-ink/60">Сөздің негізгі мағынасына үстемеленген эмоционалды бояу.</p>
+                    </div>
+                    <!-- Term 7 -->
+                    <div class="organic-card p-4 hover:bg-stone/20 transition-colors">
+                        <h5 class="font-serif text-sage text-lg mb-1">Эвфемизм</h5>
+                        <p class="text-xs text-ink/60">Дөрекі сөздерді сыпайы сөздермен алмастыру.</p>
+                    </div>
+                    <!-- Term 8 -->
+                    <div class="organic-card p-4 hover:bg-stone/20 transition-colors">
+                        <h5 class="font-serif text-sage text-lg mb-1">Дисфемизм</h5>
+                        <p class="text-xs text-ink/60">Бейтарап сөзді дөрекі мағынада қолдану.</p>
+                    </div>
+                    <!-- Term 9 -->
+                    <div class="organic-card p-4 hover:bg-stone/20 transition-colors">
+                        <h5 class="font-serif text-ink text-lg mb-1">Вербалды емес</h5>
+                        <p class="text-xs text-ink/60">Сөзсіз қарым-қатынас (ым-ишара, мимика).</p>
+                    </div>
+                    <!-- Term 10 -->
+                    <div class="organic-card p-4 hover:bg-stone/20 transition-colors">
+                        <h5 class="font-serif text-ink text-lg mb-1">Тілдік сана</h5>
+                        <p class="text-xs text-ink/60">Адамның әлемді тіл арқылы қабылдау ерекшелігі.</p>
+                    </div>
+                    <!-- Term 11 -->
+                    <div class="organic-card p-4 hover:bg-stone/20 transition-colors">
+                        <h5 class="font-serif text-ink text-lg mb-1">Дискурс</h5>
+                        <p class="text-xs text-ink/60">Белгілі бір әлеуметтік контекстегі тілдік қарым-қатынас.</p>
+                    </div>
+                    <!-- Term 12 -->
+                    <div class="organic-card p-4 hover:bg-stone/20 transition-colors">
+                        <h5 class="font-serif text-ink text-lg mb-1">Биоэтика</h5>
+                        <p class="text-xs text-ink/60">Медицина мен биологияның адамгершілік нормалары.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     
-    <!-- ==================== SYNTHESIS SECTION ==================== -->
+    <!-- ==================== SYNTHESIS & GALLERY ==================== -->
     <section id="synthesis" class="py-32 md:py-40 bg-ink text-paper relative overflow-hidden">
         <!-- Animated background -->
         <div class="absolute inset-0 opacity-20">
@@ -1208,75 +1293,63 @@
             <div class="text-center mb-24">
                 <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold reveal">ІІІ Бөлім</span>
                 <h2 class="font-serif text-5xl md:text-8xl text-paper mt-4 leading-tight reveal">
-                    Синтез:<br><span class="text-blood italic">Денсаулық және Сөз</span>
+                    Синтез:<br><span class="text-blood italic">Үйлесім Галереясы</span>
                 </h2>
             </div>
-            
-            <!-- Main idea banner -->
+
+            <!-- EXPANDED: Main Idea Block -->
             <div class="max-w-4xl mx-auto mb-24 reveal">
-                <div class="relative p-12 md:p-16 border border-paper/20 rounded-3xl text-center">
-                    <!-- Decorative corners with animation -->
-                    <div class="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-blood"></div>
-                    <div class="absolute top-4 right-4 w-12 h-12 border-t-2 border-r-2 border-blood"></div>
-                    <div class="absolute bottom-4 left-4 w-12 h-12 border-b-2 border-l-2 border-blood"></div>
-                    <div class="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-blood"></div>
-                    
-                    <!-- Spinning decoration -->
-                    <div class="absolute -top-8 -right-8 w-16 h-16 border border-dashed border-sage/50 rounded-full spin-slow"></div>
-                    <div class="absolute -bottom-8 -left-8 w-20 h-20 border border-dashed border-blood/50 rounded-full spin-slow-reverse"></div>
-                    
-                    <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold">Басты идея</span>
+                <div class="relative p-12 md:p-16 border border-paper/20 rounded-3xl text-center backdrop-blur-sm bg-paper/5">
+                    <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold">Басты түйін</span>
                     <h3 class="font-serif text-3xl md:text-5xl text-paper mt-6 leading-relaxed italic">
                         «Тәні саудың – жаны сау,<br>жаны саудың – тілі сау»
                     </h3>
+                    <p class="mt-8 font-sans text-paper/60 font-light leading-relaxed max-w-2xl mx-auto">
+                        Біздің зерттеуіміз көрсеткендей, физиологиялық саулық пен лингвистикалық тазалық бір-бірінен ажырағысыз. Дені сау адамның ойлау жүйесі айқын, сөзі анық келеді. Ал сөзі таза адамның жаны тыныш, стреске төзімді болады. Бұл – тұйықталған экожүйе.
+                    </p>
                 </div>
             </div>
-            
-            <!-- Three circles -->
-            <div class="grid md:grid-cols-3 gap-12 mb-24">
-                <div class="text-center reveal stagger-item">
-                    <div class="relative w-40 h-40 mx-auto mb-8 group">
-                        <div class="absolute inset-0 border-2 border-paper/30 rounded-full transition-all duration-500 group-hover:scale-110 group-hover:border-blood"></div>
-                        <div class="absolute inset-4 border border-dashed border-sage/50 rounded-full spin-slow"></div>
-                        <div class="absolute inset-8 border border-dotted border-blood/30 rounded-full spin-slow-reverse"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <span class="font-serif text-4xl text-blood italic group-hover:scale-110 transition-transform">Тән</span>
+
+            <!-- NEW: POLLINATIONS GALLERY (6 Items) -->
+            <div class="mb-24 reveal">
+                <h3 class="font-serif text-2xl text-paper mb-8 text-center">Визуалды дәлелдемелер</h3>
+                <div class="gallery-grid">
+                    <div class="gallery-item cursor-pointer">
+                        <img src="https://image.pollinations.ai/prompt/human%20DNA%20strand%20made%20of%20glowing%20letters%20and%20words%20genetic%20code%20linguistics%20metaphor%20blue%20gold%20particles%20cinematic%208k?width=600&height=450&nologo=true" alt="DNA and Words">
+                        <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/80 to-transparent text-paper opacity-0 hover:opacity-100 transition-opacity">
+                            <p class="font-sans text-sm font-bold">Генетикалық код</p>
                         </div>
                     </div>
-                    <h4 class="font-serif text-2xl text-paper mb-3">Физикалық саулық</h4>
-                    <p class="font-sans text-paper/60 font-light max-w-xs mx-auto">
-                        Дене күші мен қуаты — өмір негізі. Дені сау адам — бақытты адам.
-                    </p>
-                </div>
-                
-                <div class="text-center reveal stagger-item">
-                    <div class="relative w-40 h-40 mx-auto mb-8 group">
-                        <div class="absolute inset-0 border-2 border-paper/30 rounded-full transition-all duration-500 group-hover:scale-110 group-hover:border-sage"></div>
-                        <div class="absolute inset-4 border border-dashed border-blood/50 rounded-full spin-slow-reverse"></div>
-                        <div class="absolute inset-8 border border-dotted border-paper/30 rounded-full spin-slow"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <span class="font-serif text-4xl text-sage italic group-hover:scale-110 transition-transform">Жан</span>
+                    <div class="gallery-item cursor-pointer">
+                        <img src="https://image.pollinations.ai/prompt/human%20brain%20synapses%20firing%20forming%20tree%20roots%20connection%20nature%20organic%20mind%20growth%20concept%20macro%20photography%208k?width=600&height=450&nologo=true" alt="Brain Roots">
+                        <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/80 to-transparent text-paper opacity-0 hover:opacity-100 transition-opacity">
+                            <p class="font-sans text-sm font-bold">Сана тамырлары</p>
                         </div>
                     </div>
-                    <h4 class="font-serif text-2xl text-paper mb-3">Рухани саулық</h4>
-                    <p class="font-sans text-paper/60 font-light max-w-xs mx-auto">
-                        Ішкі әлем тазалығы — психологиялық тұрақтылық, өмірге деген сүйіспеншілік.
-                    </p>
-                </div>
-                
-                <div class="text-center reveal stagger-item">
-                    <div class="relative w-40 h-40 mx-auto mb-8 group">
-                        <div class="absolute inset-0 border-2 border-paper/30 rounded-full transition-all duration-500 group-hover:scale-110 group-hover:border-paper"></div>
-                        <div class="absolute inset-4 border border-dashed border-paper/50 rounded-full spin-slow"></div>
-                        <div class="absolute inset-8 border border-dotted border-sage/30 rounded-full spin-slow-reverse"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <span class="font-serif text-4xl text-paper italic group-hover:scale-110 transition-transform">Тіл</span>
+                    <div class="gallery-item cursor-pointer">
+                        <img src="https://image.pollinations.ai/prompt/water%20crystal%20structure%20reacting%20to%20positive%20words%20masaru%20emoto%20concept%20snowflake%20symmetry%20blue%20ice%20macro%208k?width=600&height=450&nologo=true" alt="Water Crystals">
+                        <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/80 to-transparent text-paper opacity-0 hover:opacity-100 transition-opacity">
+                            <p class="font-sans text-sm font-bold">Судың жады (Эмото)</p>
                         </div>
                     </div>
-                    <h4 class="font-serif text-2xl text-paper mb-3">Сөз мәдениеті</h4>
-                    <p class="font-sans text-paper/60 font-light max-w-xs mx-auto">
-                        Ой мен сөз тазалығы — мәдениеттің айнасы. Таза сөйлеу — таза ойлау.
-                    </p>
+                    <div class="gallery-item cursor-pointer">
+                        <img src="https://image.pollinations.ai/prompt/traditional%20kazakh%20yurt%20shanyrak%20view%20from%20inside%20upwards%20starry%20night%20cosmic%20connection%20ancestral%20wisdom%20cinematic%208k?width=600&height=450&nologo=true" alt="Shanyrak">
+                        <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/80 to-transparent text-paper opacity-0 hover:opacity-100 transition-opacity">
+                            <p class="font-sans text-sm font-bold">Шаңырақ философиясы</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item cursor-pointer">
+                        <img src="https://image.pollinations.ai/prompt/futuristic%20clean%20green%20city%20utopia%20healthy%20people%20talking%20harmony%20nature%20technology%20solar%20punk%20aesthetic%20bright%208k?width=600&height=450&nologo=true" alt="Future City">
+                        <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/80 to-transparent text-paper opacity-0 hover:opacity-100 transition-opacity">
+                            <p class="font-sans text-sm font-bold">Болашақ қоғам</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item cursor-pointer">
+                        <img src="https://image.pollinations.ai/prompt/abstract%20sound%20waves%20healing%20vibration%20golden%20frequency%20visualized%20particles%20flow%20energy%20medicine%20artistic%208k?width=600&height=450&nologo=true" alt="Healing Sound">
+                        <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/80 to-transparent text-paper opacity-0 hover:opacity-100 transition-opacity">
+                            <p class="font-sans text-sm font-bold">Дыбыс тербелісі</p>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -1294,17 +1367,17 @@
                 </div>
                 
                 <div class="reveal-right">
-                    <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold">Қызықты факт</span>
+                    <span class="font-sans text-xs uppercase tracking-[0.4em] text-sage font-semibold">Ғылыми дәйек</span>
                     <h3 class="font-serif text-4xl text-paper mt-4 mb-8">
                         Сөз бен иммунитет <span class="text-blood italic">байланысы</span>
                     </h3>
                     
                     <div class="space-y-6 font-sans text-lg text-paper/70 leading-relaxed font-light">
                         <p class="text-justify">
-                            Ғылыми зерттеулер таңғажайып нәтижелер көрсетті: адамның сөйлеу мәнері оның физикалық денсаулығына тікелей әсер етеді. Жағымды сөздер — алғыс, мақтау, қолдау — организмде эндорфин гормонын шығарып, иммунитетті күшейтеді.
+                            Ғылыми зерттеулер (Психонейроиммунология) таңғажайып нәтижелер көрсетті: адамның сөйлеу мәнері оның физикалық денсаулығына тікелей әсер етеді. Жағымды сөздер — алғыс, мақтау, қолдау — организмде эндорфин және дофамин гормондарын шығарып, иммунитетті күшейтеді.
                         </p>
                         <p class="text-justify">
-                            Керісінше, былапыт сөздер, өкпелеу, теріс эмоциялар — организмде кортизол (стресс гормоны) деңгейін көтеріп, иммунитетті әлсіретеді.
+                            Керісінше, былапыт сөздер, өкпелеу, теріс эмоциялар — организмде кортизол (стресс гормоны) деңгейін көтеріп, жасушалардың регенерациясын тежейді.
                         </p>
                     </div>
                     
@@ -1393,7 +1466,7 @@
                     Мәдениетті адам – ол өз денсаулығын күтетін және өз тілін құрметтейтін тұлға. Бұл екі құндылық бір-бірімен тығыз байланысты.
                 </p>
                 <p class="reveal">
-                    Болашақ ұрпаққа қалдырар ең үлкен мұра – таза қоршаған орта және шұбарланбаған ана тілі. Біз осы мұраны сақтап, дамытып, келесі буынға жеткізуге міндеттіміз.
+                    Болашақ ұрпаққа қалдырар ең үлкен мұра – таза қоршаған орта, мықты денсаулық және шұбарланбаған ана тілі. Біз осы мұраны сақтап, дамытып, келесі буынға жеткізуге міндеттіміз. Сөз тазалығы — ұлт саулығының айнасы.
                 </p>
             </div>
             
@@ -1438,7 +1511,7 @@
             <div class="organic-hr my-10"></div>
             
             <p class="text-center font-serif text-paper/30 text-sm italic">
-                «Адам өмірін қорғау – басты міндет. Адамның денсаулығы – қоғам байлығы. Сөз тазалығы»
+                «Адам өмірін қорғау – басты міндет. Адамның денсаулығы – қоғам байлығы.»
             </p>
         </div>
     </footer>
@@ -1826,38 +1899,40 @@
         });
         
         // ============================================
-        // ACCORDION - FIXED
+        // ACCORDION - FIXED & GENERALIZED
         // ============================================
-        const accordionContainer = document.getElementById('accordion-container');
         
-        if (accordionContainer) {
-            const accordionItems = accordionContainer.querySelectorAll('.accordion-item');
+        // Select ALL accordion items on the page
+        const allAccordionItems = document.querySelectorAll('.accordion-item');
+
+        allAccordionItems.forEach(item => {
+            const header = item.querySelector('.accordion-header');
             
-            accordionItems.forEach(item => {
-                const header = item.querySelector('.accordion-header');
+            header.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 
-                header.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    const isOpen = item.classList.contains('open');
-                    
-                    // Close all other accordions
-                    accordionItems.forEach(otherItem => {
-                        if (otherItem !== item) {
-                            otherItem.classList.remove('open');
+                const isOpen = item.classList.contains('open');
+
+                // Optional: Close siblings if desired. For now, let's keep them independent or scoped to container
+                const container = item.closest('.space-y-4'); // Assuming this structure
+                if (container) {
+                    const siblings = container.querySelectorAll('.accordion-item');
+                    siblings.forEach(sibling => {
+                        if (sibling !== item) {
+                            sibling.classList.remove('open');
                         }
                     });
-                    
-                    // Toggle current accordion
-                    if (isOpen) {
-                        item.classList.remove('open');
-                    } else {
-                        item.classList.add('open');
-                    }
-                });
+                }
+
+                // Toggle current
+                if (isOpen) {
+                    item.classList.remove('open');
+                } else {
+                    item.classList.add('open');
+                }
             });
-        }
+        });
         
         // ============================================
         // TABS
@@ -1886,6 +1961,38 @@
             });
         });
         
+        // ============================================
+        // HORIZONTAL SCROLL FOR TIMELINE
+        // ============================================
+        const timeline = document.getElementById('timeline');
+        if (timeline) {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            timeline.addEventListener('mousedown', (e) => {
+                isDown = true;
+                timeline.classList.add('active');
+                startX = e.pageX - timeline.offsetLeft;
+                scrollLeft = timeline.scrollLeft;
+            });
+            timeline.addEventListener('mouseleave', () => {
+                isDown = false;
+                timeline.classList.remove('active');
+            });
+            timeline.addEventListener('mouseup', () => {
+                isDown = false;
+                timeline.classList.remove('active');
+            });
+            timeline.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - timeline.offsetLeft;
+                const walk = (x - startX) * 2; // scroll-fast
+                timeline.scrollLeft = scrollLeft - walk;
+            });
+        }
+
         // ============================================
         // MOBILE MENU
         // ============================================
@@ -1950,17 +2057,6 @@
             render(progress) {
                 window.scrollTo(0, this.y * progress);
             }
-        });
-        
-        // Fallback smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
         });
         
         console.log('🌿 Bio-Logos Organic Enhanced — Сайт сәтті жүктелді!');
