@@ -1902,35 +1902,73 @@
         // ACCORDION - FIXED & GENERALIZED
         // ============================================
         
-        // Select ALL accordion items on the page
-        const allAccordionItems = document.querySelectorAll('.accordion-item');
+        const accordionItems = document.querySelectorAll('.accordion-item');
 
-        allAccordionItems.forEach(item => {
+        accordionItems.forEach(item => {
             const header = item.querySelector('.accordion-header');
-            
-            header.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const isOpen = item.classList.contains('open');
+            let closeTimeout;
 
-                // Optional: Close siblings if desired. For now, let's keep them independent or scoped to container
-                const container = item.closest('.space-y-4'); // Assuming this structure
-                if (container) {
-                    const siblings = container.querySelectorAll('.accordion-item');
+            // Function to close siblings (items in the same parent container)
+            const closeSiblings = () => {
+                const parent = item.parentElement;
+                if (parent) {
+                    const siblings = parent.querySelectorAll('.accordion-item');
                     siblings.forEach(sibling => {
-                        if (sibling !== item) {
+                        if (sibling !== item && sibling.classList.contains('open')) {
                             sibling.classList.remove('open');
                         }
                     });
                 }
+            };
 
-                // Toggle current
-                if (isOpen) {
-                    item.classList.remove('open');
+            // Function to open the item
+            const openItem = () => {
+                if (closeTimeout) clearTimeout(closeTimeout); // Cancel pending close
+                closeSiblings();
+                item.classList.add('open');
+            };
+
+            // Function to close the item
+            const closeItem = (delay = 0) => {
+                if (delay > 0) {
+                    closeTimeout = setTimeout(() => {
+                        item.classList.remove('open');
+                    }, delay);
                 } else {
-                    item.classList.add('open');
+                    item.classList.remove('open');
                 }
+            };
+
+            // 1. CLICK EVENT (Mobile Logic mostly)
+            header.addEventListener('click', (e) => {
+                // Desktop: Ignore click (hover handles it)
+                if (window.innerWidth >= 768) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+
+                // Mobile: Toggle logic
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (item.classList.contains('open')) {
+                    closeItem(0);
+                } else {
+                    openItem();
+                }
+            });
+
+            // 2. MOUSE ENTER (Desktop Open)
+            item.addEventListener('mouseenter', () => {
+                if (window.innerWidth < 768) return; // Ignore on mobile
+                openItem();
+            });
+
+            // 3. MOUSE LEAVE (Desktop Close with Delay)
+            item.addEventListener('mouseleave', () => {
+                if (window.innerWidth < 768) return; // Ignore on mobile
+                closeItem(200); // 200ms delay
             });
         });
         
