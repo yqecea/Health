@@ -221,12 +221,12 @@
             overflow: hidden;
         }
         
-        .img-reveal::after {
-            content: '';
+        .reveal-overlay {
             position: absolute;
             inset: 0;
             background: #F2F0E9;
             transform-origin: right;
+            z-index: 10;
         }
         
         /* Floating animation */
@@ -789,6 +789,7 @@
                 <div class="reveal-right relative space-y-8">
                     <!-- Image -->
                     <div class="relative overflow-hidden arch-mask aspect-[3/4] img-reveal shadow-2xl">
+                        <div class="reveal-overlay"></div>
                         <img 
                             src="https://image.pollinations.ai/prompt/wise%20kazakh%20elder%20silhouette%20reading%20ancient%20book%20warm%20golden%20sunset%20light%20rays%20dust%20particles%20atmospheric%20double%20exposure%20nature%20leaves%20organic%20artistic%20cinematic%20lighting%208k%20highly%20detailed%20photorealistic?width=800&height=1100&nologo=true&seed=123" 
                             alt="Ақсақал кітап оқып отыр"
@@ -1357,6 +1358,7 @@
             <div class="grid lg:grid-cols-2 gap-12 items-center">
                 <div class="reveal-left">
                     <div class="relative overflow-hidden rounded-2xl img-reveal">
+                        <div class="reveal-overlay"></div>
                         <img 
                             src="https://image.pollinations.ai/prompt/human%20head%20profile%20silhouette%20neural%20pathways%20glowing%20connections%20double%20exposure%20tree%20branches%20nature%20leaves%20organic%20blue%20green%20light%20artistic%20cinematic%20lighting%208k%20highly%20detailed%20photorealistic?width=800&height=900&nologo=true&seed=101112" 
                             alt="Ми мен ой"
@@ -1814,28 +1816,10 @@
         
         // Image reveal
         gsap.utils.toArray('.img-reveal').forEach(elem => {
-            gsap.fromTo(elem.querySelector('::after') || elem, 
-                {},
-                {
-                    scrollTrigger: {
-                        trigger: elem,
-                        start: 'top 80%',
-                        onEnter: () => {
-                            gsap.to(elem, {
-                                '--reveal': '100%',
-                                duration: 1.2,
-                                ease: 'power3.inOut'
-                            });
-                        }
-                    }
-                }
-            );
-            
-            // Animate the ::after pseudo element via clip-path
-            gsap.fromTo(elem, 
-                { clipPath: 'inset(0 100% 0 0)' },
-                {
-                    clipPath: 'inset(0 0% 0 0)',
+            const overlay = elem.querySelector('.reveal-overlay');
+            if (overlay) {
+                gsap.to(overlay, {
+                    scaleX: 0,
                     duration: 1.5,
                     ease: 'power3.inOut',
                     scrollTrigger: {
@@ -1843,8 +1827,8 @@
                         start: 'top 80%',
                         toggleActions: 'play none none reverse'
                     }
-                }
-            );
+                });
+            }
         });
         
         // Parallax images
